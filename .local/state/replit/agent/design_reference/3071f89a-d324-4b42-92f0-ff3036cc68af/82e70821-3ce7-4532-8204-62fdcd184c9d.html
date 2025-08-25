@@ -1,0 +1,832 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskConnect - Small Jobs Marketplace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    primary: '#2563EB',
+                    secondary: '#10B981',
+                    accent: '#F59E0B',
+                    neutral: {
+                        50: '#F8FAFC',
+                        100: '#F1F5F9',
+                        200: '#E2E8F0',
+                        300: '#CBD5E1',
+                        400: '#94A3B8',
+                        500: '#64748B',
+                        600: '#475569',
+                        700: '#334155',
+                        800: '#1E293B',
+                        900: '#0F172A'
+                    }
+                },
+                fontFamily: {
+                    'sans': ['Inter', 'system-ui', 'sans-serif']
+                }
+            }
+        }
+    };
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-neutral-50 font-sans">
+    <!-- @COMPONENT: Header -->
+    <header class="bg-white shadow-sm border-b border-neutral-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-8">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                            <i class="fas fa-handshake text-white text-sm"></i>
+                        </div>
+                        <span class="text-xl font-bold text-neutral-900" data-bind="app.name">TaskConnect</span>
+                    </div>
+                    <nav class="hidden md:flex space-x-6">
+                        <a href="#browse" class="text-neutral-600 hover:text-primary transition-colors" data-event="click:navigateTo">Browse Jobs</a>
+                        <a href="#post" class="text-neutral-600 hover:text-primary transition-colors" data-event="click:navigateTo">Post a Job</a>
+                        <a href="#how-it-works" class="text-neutral-600 hover:text-primary transition-colors" data-event="click:navigateTo">How it Works</a>
+                    </nav>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="text-neutral-600 hover:text-primary transition-colors" data-event="click:openNotifications">
+                        <i class="fas fa-bell text-lg"></i>
+                        <span class="sr-only">Notifications</span>
+                    </button>
+                    <div class="flex items-center space-x-3">
+                        <button class="text-primary hover:text-blue-700 font-medium transition-colors" data-event="click:openLogin">Sign In</button>
+                        <button class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium" data-event="click:openSignup">Get Started</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- @END_COMPONENT: Header -->
+
+    <!-- @COMPONENT: HeroSection -->
+    <section class="bg-gradient-to-br from-primary to-blue-700 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+            <div class="text-center">
+                <h1 class="text-4xl md:text-6xl font-bold mb-6">Find Local Help for <span class="text-blue-200">Any Job</span></h1>
+                <p class="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">Connect with skilled workers in your area for home improvement, delivery, and more. Post a job or find work in minutes.</p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
+                    <button class="bg-white text-primary px-8 py-4 rounded-lg font-semibold hover:bg-neutral-50 transition-colors" data-event="click:navigateToPostJob">
+                        <i class="fas fa-plus mr-2"></i>Post a Job
+                    </button>
+                    <button class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-primary transition-colors" data-event="click:navigateToBrowse">
+                        <i class="fas fa-search mr-2"></i>Find Work
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: HeroSection -->
+
+    <!-- @COMPONENT: CategorySection -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-neutral-900 text-center mb-12">Popular Categories</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                <!-- @MAP: categories.map(category => ( -->
+                <div class="text-center group cursor-pointer" data-event="click:filterByCategory" data-mock="true">
+                    <div class="w-16 h-16 bg-primary bg-opacity-10 rounded-2xl flex items-center justify-center mx-auto mb-3 group-hover:bg-opacity-20 transition-colors">
+                        <i class="fas fa-hammer text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="font-medium text-neutral-900">Home Repair</h3>
+                    <p class="text-sm text-neutral-500" data-bind="category.jobCount">142 jobs</p>
+                </div>
+                <div class="text-center group cursor-pointer" data-event="click:filterByCategory" data-mock="true">
+                    <div class="w-16 h-16 bg-secondary bg-opacity-10 rounded-2xl flex items-center justify-center mx-auto mb-3 group-hover:bg-opacity-20 transition-colors">
+                        <i class="fas fa-truck text-secondary text-2xl"></i>
+                    </div>
+                    <h3 class="font-medium text-neutral-900">Delivery</h3>
+                    <p class="text-sm text-neutral-500" data-bind="category.jobCount">89 jobs</p>
+                </div>
+                <div class="text-center group cursor-pointer" data-event="click:filterByCategory" data-mock="true">
+                    <div class="w-16 h-16 bg-accent bg-opacity-10 rounded-2xl flex items-center justify-center mx-auto mb-3 group-hover:bg-opacity-20 transition-colors">
+                        <i class="fas fa-broom text-accent text-2xl"></i>
+                    </div>
+                    <h3 class="font-medium text-neutral-900">Cleaning</h3>
+                    <p class="text-sm text-neutral-500" data-bind="category.jobCount">76 jobs</p>
+                </div>
+                <div class="text-center group cursor-pointer" data-event="click:filterByCategory" data-mock="true">
+                    <div class="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-3 group-hover:bg-purple-200 transition-colors">
+                        <i class="fas fa-leaf text-purple-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-medium text-neutral-900">Gardening</h3>
+                    <p class="text-sm text-neutral-500" data-bind="category.jobCount">54 jobs</p>
+                </div>
+                <div class="text-center group cursor-pointer" data-event="click:filterByCategory" data-mock="true">
+                    <div class="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-3 group-hover:bg-red-200 transition-colors">
+                        <i class="fas fa-tools text-red-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-medium text-neutral-900">Assembly</h3>
+                    <p class="text-sm text-neutral-500" data-bind="category.jobCount">38 jobs</p>
+                </div>
+                <div class="text-center group cursor-pointer" data-event="click:filterByCategory" data-mock="true">
+                    <div class="w-16 h-16 bg-pink-100 rounded-2xl flex items-center justify-center mx-auto mb-3 group-hover:bg-pink-200 transition-colors">
+                        <i class="fas fa-palette text-pink-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-medium text-neutral-900">Painting</h3>
+                    <p class="text-sm text-neutral-500" data-bind="category.jobCount">41 jobs</p>
+                </div>
+                <!-- @END_MAP )) -->
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: CategorySection -->
+
+    <!-- @COMPONENT: JobListingsSection -->
+    <section class="py-16 bg-neutral-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row gap-8">
+                <!-- @COMPONENT: SearchFilters -->
+                <div class="lg:w-1/4">
+                    <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 sticky top-24">
+                        <h3 class="font-semibold text-neutral-900 mb-4">Filter Jobs</h3>
+                        
+                        <!-- Search Input -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-neutral-700 mb-2">Search</label>
+                            <div class="relative">
+                                <input type="text" placeholder="Search jobs..." class="w-full pl-10 pr-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" data-event="input:handleSearch" data-mock="true">
+                                <i class="fas fa-search absolute left-3 top-3 text-neutral-400"></i>
+                            </div>
+                        </div>
+
+                        <!-- Location Filter -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-neutral-700 mb-2">Location</label>
+                            <select class="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" data-event="change:handleLocationFilter" data-mock="true">
+                                <option value="">All locations</option>
+                                <option value="within-5">Within 5 miles</option>
+                                <option value="within-10">Within 10 miles</option>
+                                <option value="within-25">Within 25 miles</option>
+                            </select>
+                        </div>
+
+                        <!-- Budget Range -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-neutral-700 mb-2">Budget Range</label>
+                            <div class="space-y-2">
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="rounded border-neutral-300 text-primary focus:ring-primary" data-mock="true">
+                                    <span class="ml-2 text-sm text-neutral-600">Under $50</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="rounded border-neutral-300 text-primary focus:ring-primary" data-mock="true">
+                                    <span class="ml-2 text-sm text-neutral-600">$50 - $100</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="rounded border-neutral-300 text-primary focus:ring-primary" data-mock="true">
+                                    <span class="ml-2 text-sm text-neutral-600">$100 - $200</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="rounded border-neutral-300 text-primary focus:ring-primary" data-mock="true">
+                                    <span class="ml-2 text-sm text-neutral-600">Over $200</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Job Type -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-neutral-700 mb-2">Job Type</label>
+                            <div class="space-y-2">
+                                <label class="flex items-center">
+                                    <input type="radio" name="jobType" class="border-neutral-300 text-primary focus:ring-primary" data-mock="true">
+                                    <span class="ml-2 text-sm text-neutral-600">One-time</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="radio" name="jobType" class="border-neutral-300 text-primary focus:ring-primary" data-mock="true">
+                                    <span class="ml-2 text-sm text-neutral-600">Recurring</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button class="w-full bg-primary text-white py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium" data-event="click:applyFilters">
+                            Apply Filters
+                        </button>
+                    </div>
+                </div>
+                <!-- @END_COMPONENT: SearchFilters -->
+
+                <!-- @COMPONENT: JobListingsGrid -->
+                <div class="lg:w-3/4">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-neutral-900">Available Jobs</h2>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm text-neutral-500">Sort by:</span>
+                            <select class="border border-neutral-300 rounded-lg px-3 py-1 text-sm focus:ring-2 focus:ring-primary focus:border-transparent" data-event="change:handleSort" data-mock="true">
+                                <option value="newest">Newest first</option>
+                                <option value="budget-high">Highest budget</option>
+                                <option value="budget-low">Lowest budget</option>
+                                <option value="distance">Closest to me</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid gap-6">
+                        <!-- @MAP: jobs.map(job => ( -->
+                        <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 hover:shadow-md transition-shadow cursor-pointer" data-event="click:openJobDetails" data-mock="true">
+                            <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+                                <div class="flex-1">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <div>
+                                            <h3 class="font-semibold text-neutral-900 text-lg mb-1" data-bind="job.title">Hang 3 Paintings in Living Room</h3>
+                                            <div class="flex items-center text-sm text-neutral-500 space-x-4">
+                                                <span class="flex items-center">
+                                                    <i class="fas fa-map-marker-alt mr-1"></i>
+                                                    <span data-bind="job.location">Downtown, Seattle</span>
+                                                </span>
+                                                <span class="flex items-center">
+                                                    <i class="fas fa-clock mr-1"></i>
+                                                    <span data-bind="job.timeAgo">2 hours ago</span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-secondary bg-opacity-10 text-secondary">
+                                            <span data-bind="job.category">Home Improvement</span>
+                                        </span>
+                                    </div>
+                                    
+                                    <p class="text-neutral-600 mb-4" data-bind="job.description">Need someone to professionally hang 3 medium-sized paintings in my living room. Must have own tools and experience with different wall types. Should take about 1-2 hours.</p>
+                                    
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center space-x-4">
+                                            <div class="flex items-center">
+                                                <div class="w-8 h-8 bg-neutral-200 rounded-full mr-2"></div>
+                                                <span class="text-sm font-medium text-neutral-700" data-bind="job.poster.name">Sarah Chen</span>
+                                                <div class="flex items-center ml-2">
+                                                    <i class="fas fa-star text-accent text-xs"></i>
+                                                    <span class="text-xs text-neutral-500 ml-1" data-bind="job.poster.rating">4.8 (12)</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <div class="text-2xl font-bold text-neutral-900" data-bind="job.budget">$75</div>
+                                            <div class="text-xs text-neutral-500">Fixed price</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center justify-between mt-4 pt-4 border-t border-neutral-100">
+                                <div class="flex items-center space-x-2 text-sm text-neutral-500">
+                                    <span class="flex items-center">
+                                        <i class="fas fa-users mr-1"></i>
+                                        <span data-bind="job.applicants">3 applicants</span>
+                                    </span>
+                                    <span class="w-1 h-1 bg-neutral-300 rounded-full"></span>
+                                    <span data-bind="job.urgency">Needed by weekend</span>
+                                </div>
+                                <button class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium text-sm" data-event="click:applyToJob">
+                                    Apply Now
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 hover:shadow-md transition-shadow cursor-pointer" data-event="click:openJobDetails" data-mock="true">
+                            <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+                                <div class="flex-1">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <div>
+                                            <h3 class="font-semibold text-neutral-900 text-lg mb-1" data-bind="job.title">Grocery Delivery from Whole Foods</h3>
+                                            <div class="flex items-center text-sm text-neutral-500 space-x-4">
+                                                <span class="flex items-center">
+                                                    <i class="fas fa-map-marker-alt mr-1"></i>
+                                                    <span data-bind="job.location">Capitol Hill, Seattle</span>
+                                                </span>
+                                                <span class="flex items-center">
+                                                    <i class="fas fa-clock mr-1"></i>
+                                                    <span data-bind="job.timeAgo">4 hours ago</span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                            <span data-bind="job.category">Delivery</span>
+                                        </span>
+                                    </div>
+                                    
+                                    <p class="text-neutral-600 mb-4" data-bind="job.description">Need grocery delivery today. Small list (about 15 items). Store is 0.5 miles from my apartment. Will provide shopping list and payment info via app.</p>
+                                    
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center space-x-4">
+                                            <div class="flex items-center">
+                                                <div class="w-8 h-8 bg-neutral-200 rounded-full mr-2"></div>
+                                                <span class="text-sm font-medium text-neutral-700" data-bind="job.poster.name">Mike Johnson</span>
+                                                <div class="flex items-center ml-2">
+                                                    <i class="fas fa-star text-accent text-xs"></i>
+                                                    <span class="text-xs text-neutral-500 ml-1" data-bind="job.poster.rating">4.9 (28)</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <div class="text-2xl font-bold text-neutral-900" data-bind="job.budget">$25</div>
+                                            <div class="text-xs text-neutral-500">+ tips</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center justify-between mt-4 pt-4 border-t border-neutral-100">
+                                <div class="flex items-center space-x-2 text-sm text-neutral-500">
+                                    <span class="flex items-center">
+                                        <i class="fas fa-users mr-1"></i>
+                                        <span data-bind="job.applicants">7 applicants</span>
+                                    </span>
+                                    <span class="w-1 h-1 bg-neutral-300 rounded-full"></span>
+                                    <span data-bind="job.urgency">ASAP</span>
+                                </div>
+                                <button class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium text-sm" data-event="click:applyToJob">
+                                    Apply Now
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 hover:shadow-md transition-shadow cursor-pointer" data-event="click:openJobDetails" data-mock="true">
+                            <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+                                <div class="flex-1">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <div>
+                                            <h3 class="font-semibold text-neutral-900 text-lg mb-1" data-bind="job.title">Deep Clean 2BR Apartment</h3>
+                                            <div class="flex items-center text-sm text-neutral-500 space-x-4">
+                                                <span class="flex items-center">
+                                                    <i class="fas fa-map-marker-alt mr-1"></i>
+                                                    <span data-bind="job.location">Fremont, Seattle</span>
+                                                </span>
+                                                <span class="flex items-center">
+                                                    <i class="fas fa-clock mr-1"></i>
+                                                    <span data-bind="job.timeAgo">1 day ago</span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                                            <span data-bind="job.category">Cleaning</span>
+                                        </span>
+                                    </div>
+                                    
+                                    <p class="text-neutral-600 mb-4" data-bind="job.description">Moving out and need a thorough deep clean. Includes kitchen, bathrooms, floors, windows. Must provide own supplies. Expected 4-5 hours of work.</p>
+                                    
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center space-x-4">
+                                            <div class="flex items-center">
+                                                <div class="w-8 h-8 bg-neutral-200 rounded-full mr-2"></div>
+                                                <span class="text-sm font-medium text-neutral-700" data-bind="job.poster.name">Emma Wilson</span>
+                                                <div class="flex items-center ml-2">
+                                                    <i class="fas fa-star text-accent text-xs"></i>
+                                                    <span class="text-xs text-neutral-500 ml-1" data-bind="job.poster.rating">4.7 (8)</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <div class="text-2xl font-bold text-neutral-900" data-bind="job.budget">$150</div>
+                                            <div class="text-xs text-neutral-500">Fixed price</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center justify-between mt-4 pt-4 border-t border-neutral-100">
+                                <div class="flex items-center space-x-2 text-sm text-neutral-500">
+                                    <span class="flex items-center">
+                                        <i class="fas fa-users mr-1"></i>
+                                        <span data-bind="job.applicants">12 applicants</span>
+                                    </span>
+                                    <span class="w-1 h-1 bg-neutral-300 rounded-full"></span>
+                                    <span data-bind="job.urgency">Flexible timing</span>
+                                </div>
+                                <button class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium text-sm" data-event="click:applyToJob">
+                                    Apply Now
+                                </button>
+                            </div>
+                        </div>
+                        <!-- @END_MAP )) -->
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="flex justify-center items-center mt-8 space-x-2">
+                        <button class="px-3 py-2 text-neutral-500 hover:text-primary transition-colors" data-event="click:previousPage" data-mock="true">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="px-3 py-2 bg-primary text-white rounded-lg">1</button>
+                        <button class="px-3 py-2 text-neutral-500 hover:text-primary transition-colors" data-mock="true">2</button>
+                        <button class="px-3 py-2 text-neutral-500 hover:text-primary transition-colors" data-mock="true">3</button>
+                        <button class="px-3 py-2 text-neutral-500 hover:text-primary transition-colors" data-event="click:nextPage" data-mock="true">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- @END_COMPONENT: JobListingsGrid -->
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: JobListingsSection -->
+
+    <!-- @COMPONENT: PostJobSection -->
+    <section class="py-16 bg-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-neutral-900 mb-4">Post Your Job</h2>
+                <p class="text-lg text-neutral-600">Get your task completed by skilled local workers</p>
+            </div>
+
+            <div class="bg-white border border-neutral-200 rounded-2xl shadow-sm p-8">
+                <form data-event="submit:handleJobPost" data-implementation="Should validate form before submission">
+                    <!-- @STATE: isSubmitting:boolean = false -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-neutral-700 mb-2">Job Title *</label>
+                            <input type="text" placeholder="e.g., Hang paintings in living room" class="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" required data-mock="true">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-neutral-700 mb-2">Category *</label>
+                            <select class="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" required data-mock="true">
+                                <option value="">Select category</option>
+                                <option value="home-repair">Home Repair</option>
+                                <option value="delivery">Delivery</option>
+                                <option value="cleaning">Cleaning</option>
+                                <option value="gardening">Gardening</option>
+                                <option value="assembly">Assembly</option>
+                                <option value="painting">Painting</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <label class="block text-sm font-medium text-neutral-700 mb-2">Job Description *</label>
+                        <textarea rows="4" placeholder="Describe what you need done, including any specific requirements..." class="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" required data-mock="true"></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+                        <div>
+                            <label class="block text-sm font-medium text-neutral-700 mb-2">Budget *</label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-3 text-neutral-500">$</span>
+                                <input type="number" placeholder="0" class="w-full pl-8 pr-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" required data-mock="true">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-neutral-700 mb-2">Location *</label>
+                            <input type="text" placeholder="City, State" class="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" required data-mock="true">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-neutral-700 mb-2">Needed By</label>
+                            <input type="date" class="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" data-mock="true">
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <label class="block text-sm font-medium text-neutral-700 mb-2">Additional Requirements</label>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded border-neutral-300 text-primary focus:ring-primary" data-mock="true">
+                                <span class="ml-2 text-sm text-neutral-600">Worker must provide own tools</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded border-neutral-300 text-primary focus:ring-primary" data-mock="true">
+                                <span class="ml-2 text-sm text-neutral-600">Background check required</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded border-neutral-300 text-primary focus:ring-primary" data-mock="true">
+                                <span class="ml-2 text-sm text-neutral-600">Insurance required</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end mt-8">
+                        <button type="submit" class="bg-primary text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold" data-event="click:handleSubmit">
+                            Post Job - $2.99 fee
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: PostJobSection -->
+
+    <!-- @COMPONENT: DashboardSection -->
+    <section class="py-16 bg-neutral-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-neutral-900 mb-8">My Dashboard</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                <!-- Stats Cards -->
+                <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-neutral-600">Active Jobs</p>
+                            <p class="text-3xl font-bold text-neutral-900" data-bind="stats.activeJobs" data-mock="true">3</p>
+                        </div>
+                        <div class="w-12 h-12 bg-primary bg-opacity-10 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-briefcase text-primary text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-neutral-600">Total Spent</p>
+                            <p class="text-3xl font-bold text-neutral-900" data-bind="stats.totalSpent" data-mock="true">$847</p>
+                        </div>
+                        <div class="w-12 h-12 bg-secondary bg-opacity-10 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-dollar-sign text-secondary text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-neutral-600">Completed Jobs</p>
+                            <p class="text-3xl font-bold text-neutral-900" data-bind="stats.completedJobs" data-mock="true">12</p>
+                        </div>
+                        <div class="w-12 h-12 bg-accent bg-opacity-10 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-check-circle text-accent text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Recent Jobs -->
+                <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6">
+                    <h3 class="font-semibold text-neutral-900 mb-4">Recent Jobs</h3>
+                    <div class="space-y-4">
+                        <!-- @MAP: recentJobs.map(job => ( -->
+                        <div class="flex items-center justify-between py-3 border-b border-neutral-100 last:border-b-0" data-mock="true">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-primary bg-opacity-10 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-hammer text-primary text-sm"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-neutral-900" data-bind="job.title">Hang paintings</p>
+                                    <p class="text-sm text-neutral-500" data-bind="job.status">Completed • $75</p>
+                                </div>
+                            </div>
+                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-secondary bg-opacity-10 text-secondary">
+                                Completed
+                            </span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between py-3 border-b border-neutral-100 last:border-b-0" data-mock="true">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-truck text-blue-600 text-sm"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-neutral-900" data-bind="job.title">Grocery delivery</p>
+                                    <p class="text-sm text-neutral-500" data-bind="job.status">In Progress • $25</p>
+                                </div>
+                            </div>
+                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-accent bg-opacity-10 text-accent">
+                                In Progress
+                            </span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between py-3" data-mock="true">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-broom text-purple-600 text-sm"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-neutral-900" data-bind="job.title">Apartment cleaning</p>
+                                    <p class="text-sm text-neutral-500" data-bind="job.status">5 applicants • $150</p>
+                                </div>
+                            </div>
+                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                Open
+                            </span>
+                        </div>
+                        <!-- @END_MAP )) -->
+                    </div>
+                </div>
+
+                <!-- Messages -->
+                <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6">
+                    <h3 class="font-semibold text-neutral-900 mb-4">Recent Messages</h3>
+                    <div class="space-y-4">
+                        <!-- @MAP: messages.map(message => ( -->
+                        <div class="flex items-start space-x-3" data-mock="true">
+                            <div class="w-10 h-10 bg-neutral-200 rounded-full flex-shrink-0"></div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center justify-between">
+                                    <p class="font-medium text-neutral-900" data-bind="message.sender">Alex Thompson</p>
+                                    <span class="text-xs text-neutral-500" data-bind="message.time">2h ago</span>
+                                </div>
+                                <p class="text-sm text-neutral-600 mt-1" data-bind="message.preview">Hi! I'm interested in your painting job. I have 5 years of experience and can...</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-3" data-mock="true">
+                            <div class="w-10 h-10 bg-neutral-200 rounded-full flex-shrink-0"></div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center justify-between">
+                                    <p class="font-medium text-neutral-900" data-bind="message.sender">Maya Rodriguez</p>
+                                    <span class="text-xs text-neutral-500" data-bind="message.time">1d ago</span>
+                                </div>
+                                <p class="text-sm text-neutral-600 mt-1" data-bind="message.preview">The delivery has been completed! The groceries are at your front door...</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-3" data-mock="true">
+                            <div class="w-10 h-10 bg-neutral-200 rounded-full flex-shrink-0"></div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center justify-between">
+                                    <p class="font-medium text-neutral-900" data-bind="message.sender">Carlos Smith</p>
+                                    <span class="text-xs text-neutral-500" data-bind="message.time">2d ago</span>
+                                </div>
+                                <p class="text-sm text-neutral-600 mt-1" data-bind="message.preview">Thank you for choosing me for the cleaning job! When would be a good time...</p>
+                            </div>
+                        </div>
+                        <!-- @END_MAP )) -->
+                    </div>
+                    <button class="w-full mt-4 text-primary hover:text-blue-700 font-medium text-sm transition-colors" data-event="click:viewAllMessages">
+                        View All Messages
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: DashboardSection -->
+
+    <!-- @COMPONENT: Footer -->
+    <footer class="bg-neutral-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                            <i class="fas fa-handshake text-white text-sm"></i>
+                        </div>
+                        <span class="text-xl font-bold">TaskConnect</span>
+                    </div>
+                    <p class="text-neutral-400 text-sm mb-4">Connecting people with local help for small jobs and tasks.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-neutral-400 hover:text-white transition-colors" data-mock="true">
+                            <i class="fab fa-facebook text-lg"></i>
+                        </a>
+                        <a href="#" class="text-neutral-400 hover:text-white transition-colors" data-mock="true">
+                            <i class="fab fa-twitter text-lg"></i>
+                        </a>
+                        <a href="#" class="text-neutral-400 hover:text-white transition-colors" data-mock="true">
+                            <i class="fab fa-instagram text-lg"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">For Job Posters</h4>
+                    <ul class="space-y-2 text-sm text-neutral-400">
+                        <li><a href="#" class="hover:text-white transition-colors" data-mock="true">How to Post</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-mock="true">Pricing</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-mock="true">Safety Tips</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-mock="true">Success Stories</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">For Workers</h4>
+                    <ul class="space-y-2 text-sm text-neutral-400">
+                        <li><a href="#" class="hover:text-white transition-colors" data-mock="true">Getting Started</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-mock="true">Earning Tips</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-mock="true">Best Practices</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-mock="true">Worker Resources</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Support</h4>
+                    <ul class="space-y-2 text-sm text-neutral-400">
+                        <li><a href="#" class="hover:text-white transition-colors" data-mock="true">Help Center</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-mock="true">Contact Us</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-mock="true">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-mock="true">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-neutral-800 mt-8 pt-8 text-center text-sm text-neutral-400">
+                <p>&copy; 2024 TaskConnect. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <!-- @END_COMPONENT: Footer -->
+
+    <!-- @COMPONENT: Modal (hidden by default) -->
+    <div id="jobApplicationModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50" data-event="click:closeModal">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-2xl shadow-xl max-w-lg w-full p-6" data-event="click:stopPropagation">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold text-neutral-900">Apply for Job</h3>
+                    <button class="text-neutral-400 hover:text-neutral-600 transition-colors" data-event="click:closeModal">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <form data-event="submit:handleApplication" data-implementation="Should validate and submit application">
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-neutral-700 mb-2">Cover Message</label>
+                        <textarea rows="4" placeholder="Tell the job poster why you're the right person for this job..." class="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" data-mock="true"></textarea>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-neutral-700 mb-2">Your Rate</label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-3 text-neutral-500">$</span>
+                            <input type="number" placeholder="75" class="w-full pl-8 pr-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" data-mock="true">
+                        </div>
+                        <p class="text-xs text-neutral-500 mt-1">Enter your rate for this job</p>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-neutral-700 mb-2">Availability</label>
+                        <select class="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" data-mock="true">
+                            <option value="">Select availability</option>
+                            <option value="today">Today</option>
+                            <option value="tomorrow">Tomorrow</option>
+                            <option value="this-week">This week</option>
+                            <option value="next-week">Next week</option>
+                            <option value="flexible">Flexible</option>
+                        </select>
+                    </div>
+                    
+                    <div class="flex space-x-3">
+                        <button type="button" class="flex-1 bg-neutral-200 text-neutral-700 py-3 rounded-lg hover:bg-neutral-300 transition-colors font-medium" data-event="click:closeModal">
+                            Cancel
+                        </button>
+                        <button type="submit" class="flex-1 bg-primary text-white py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium">
+                            Send Application
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- @END_COMPONENT: Modal -->
+
+    <script>
+    (function() {
+        // TODO: Implement business logic, API calls, or state management
+        
+        // Basic modal functionality
+        const modal = document.getElementById('jobApplicationModal');
+        const applyButtons = document.querySelectorAll('[data-event*="applyToJob"]');
+        const closeModalButtons = document.querySelectorAll('[data-event*="closeModal"]');
+        
+        applyButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                modal.classList.remove('hidden');
+            });
+        });
+        
+        closeModalButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                modal.classList.add('hidden');
+            });
+        });
+        
+        // Close modal when clicking outside
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.add('hidden');
+            }
+        });
+        
+        // Prevent modal close when clicking inside
+        const modalContent = modal.querySelector('[data-event*="stopPropagation"]');
+        modalContent.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+        
+        // Form submission handlers (mock)
+        const forms = document.querySelectorAll('form');
+        forms.forEach(form => {
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                // TODO: Implement form validation and submission
+                console.log('Form submitted:', form);
+            });
+        });
+        
+        // Mobile menu toggle (basic implementation)
+        const mobileMenuButton = document.querySelector('[data-mobile-menu-toggle]');
+        if (mobileMenuButton) {
+            mobileMenuButton.addEventListener('click', () => {
+                // TODO: Implement mobile menu toggle
+                console.log('Mobile menu toggle clicked');
+            });
+        }
+    })();
+    </script>
+</body>
+</html>

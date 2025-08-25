@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Google OAuth Verification</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .container { max-width: 600px; margin: 0 auto; }
+        .url { background: #f0f0f0; padding: 10px; border-radius: 5px; word-break: break-all; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .error { background: #fee; border: 1px solid #fcc; }
+        .success { background: #efe; border: 1px solid #cfc; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Google OAuth Configuration Helper</h1>
+        
+        <h2>Current Configuration</h2>
+        <p><strong>Current Domain:</strong></p>
+        <div class="url" id="current-domain">Loading...</div>
+        
+        <p><strong>Required Redirect URI for Google Console:</strong></p>
+        <div class="url" id="redirect-uri">Loading...</div>
+        
+        <h2>Instructions</h2>
+        <ol>
+            <li>Copy the redirect URI above</li>
+            <li>Go to <a href="https://console.cloud.google.com/apis/credentials" target="_blank">Google Cloud Console → Credentials</a></li>
+            <li>Click on your OAuth 2.0 Client ID</li>
+            <li>Under "Authorized redirect URIs", add the exact URL shown above</li>
+            <li>Save the changes</li>
+            <li>Wait 5-10 minutes for changes to propagate</li>
+            <li>Try the Google login again</li>
+        </ol>
+        
+        <div id="test-status" class="status"></div>
+        
+        <button onclick="testCallback()" style="padding: 10px 20px; font-size: 16px;">Test Callback URL</button>
+    </div>
+
+    <script>
+        // Get current domain and construct redirect URI
+        const currentDomain = window.location.hostname;
+        const protocol = window.location.protocol;
+        const redirectUri = `${protocol}//${currentDomain}/api/auth/google/callback`;
+        
+        document.getElementById('current-domain').textContent = currentDomain;
+        document.getElementById('redirect-uri').textContent = redirectUri;
+        
+        function testCallback() {
+            const statusDiv = document.getElementById('test-status');
+            statusDiv.textContent = 'Testing callback URL...';
+            statusDiv.className = 'status';
+            
+            fetch('/api/auth/google/callback?test=true')
+                .then(response => {
+                    if (response.ok) {
+                        statusDiv.textContent = 'Callback URL is reachable ✓';
+                        statusDiv.className = 'status success';
+                    } else {
+                        statusDiv.textContent = `Callback URL returned status: ${response.status}`;
+                        statusDiv.className = 'status error';
+                    }
+                })
+                .catch(error => {
+                    statusDiv.textContent = `Error testing callback: ${error.message}`;
+                    statusDiv.className = 'status error';
+                });
+        }
+    </script>
+</body>
+</html>

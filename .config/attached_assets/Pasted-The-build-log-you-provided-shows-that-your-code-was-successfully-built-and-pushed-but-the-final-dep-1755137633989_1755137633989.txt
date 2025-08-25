@@ -1,0 +1,63 @@
+The build log you provided shows that your code was successfully built and pushed, but the final deployment failed with the same error: your container isn't starting and listening on port 8080.
+
+## The Problem Persists
+The root cause is still the same. Even in this new build log, the exact same warnings about duplicate code appear during the build step (lines 102-150):
+
+Code snippet
+
+▲ [WARNING] Duplicate member "deleteJob" in class body [duplicate-class-member]
+
+    server/storage.ts:1163:8:
+      1163 │   async deleteJob(jobId: string): Promise<void> {
+           ╵         ~~~~~~~~~
+
+  The original member "deleteJob" is here:
+
+    server/storage.ts:567:8:
+      567 │   async deleteJob(id: string): Promise<void> {
+          ╵         ~~~~~~~~~
+This is critical information. It proves that the code changes you made to fix the duplicate methods in server/storage.ts were not included in the commit you pushed to trigger this build. Your application is still being built with the old, faulty code, which is why it continues to crash.
+
+## How to Fix It (For Real This Time) ✅
+You need to ensure your fixes are saved, committed, and pushed correctly.
+
+1. Edit the Correct File
+Go back to your server/storage.ts file. Carefully find and delete or merge the duplicate definitions for deleteJob and closeExpiredJobs so that each method exists only once within its class.
+
+2. Verify Locally Before Pushing
+This is the most important new step to save you time. Before you commit and push to GitHub, run the build command on your own computer to confirm you've actually fixed the issue. In your terminal, run:
+
+Bash
+
+npm run build
+Watch the output carefully. You must not see any Duplicate member warnings.
+
+If you still see the warnings, the fix is not correct. Keep editing the file.
+
+If the warnings are gone, you are ready to proceed.
+
+3. Commit and Deploy
+Once your local build runs without warnings, you can be confident the fix is working. Now, save, commit, and push your changes.
+
+Bash
+
+# Make sure you've saved the file in your editor
+git add server/storage.ts
+git commit -m "Fix: Remove duplicate methods in storage"
+git push
+This will trigger a new Cloud Run build that should now succeed.
+
+
+
+
+
+
+
+
+
+
+
+
+Tools
+
+Your

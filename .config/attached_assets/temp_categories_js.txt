@@ -1,0 +1,997 @@
+export const jobCategories = [
+  "All Categories",
+  "Access Control",
+  "Accessory Placement",
+  "Accident Recovery",
+  "Accountability",
+  "Accounts Payable",
+  "AC Install",
+  "AC Repair",
+  "Acrylic Nails",
+  "Ad Copy",
+  "Adult CPR",
+  "AED Use",
+  "Aerial Real Estate",
+  "Affiliate Marketing",
+  "Affiliate Recruitment",
+  "After School Care",
+  "Agility Training",
+  "AI Model Development",
+  "Alarm Check",
+  "Alarm System Installation",
+  "Algae Control",
+  "Algae Removal",
+  "Alterations",
+  "Aluminum Welding",
+  "Analytics Reporting",
+  "Android Apps",
+  "Animal Boarding",
+  "Animated Logos",
+  "Antenna Installation",
+  "Antique Restoration",
+  "API Development",
+  "API Documentation",
+  "API Integration",
+  "Appliance Installation",
+  "Appliance Repair",
+  "Aquarium Maintenance",
+  "AR App Development",
+  "Architectural Plans",
+  "Articulation Therapy",
+  "Art Installation",
+  "AR/VR Development",
+  "As Built Drawings",
+  "Audiobook Narration",
+  "Audio Mixing",
+  "Audio Transcription",
+  "Audio/Visual Setup",
+  "Audit Support",
+  "Authentication Systems",
+  "Auto Body Repair",
+  "Auto Detailing",
+  "Automation Flows",
+  "Auto Mechanic",
+  "Automotive Tinting",
+  "AWS Architecture",
+  "Azure Architecture",
+  "Babysitting",
+  "Back-End Development",
+  "Background Checks",
+  "Backsplash Install",
+  "Backup and Recovery",
+  "Baking Services",
+  "Balancing",
+  "Ballet",
+  "Band Adjustment",
+  "Bank Reconciliation",
+  "Barrier Setup",
+  "Bartending",
+  "Basement Waterproofing",
+  "Basic First Aid",
+  "Basketball Coach",
+  "Bat Exclusion",
+  "Bath and Brush",
+  "Bathing Assistance",
+  "Battery Replacement",
+  "Batt Installation",
+  "Bed Frame Assembly",
+  "Bedtime Routine",
+  "Bee Removal",
+  "Beginner Lessons",
+  "Bicycle Repair",
+  "Bid Management",
+  "Big Data Processing",
+  "Bike Messenger",
+  "Blockchain Development",
+  "Blog & Article Writing",
+  "Blog Posts",
+  "Blown-In Insulation",
+  "Boat Repair",
+  "Book Ghostwriting",
+  "Bookkeeping & Accounting",
+  "Bot Development",
+  "Bouquet Design",
+  "Box Labeling",
+  "Brake Adjustment",
+  "Brake Repair",
+  "Brake Service",
+  "Brand Guidelines",
+  "Brass Instrument Repair",
+  "Brazilian Jiu-Jitsu",
+  "Bread Baking",
+  "Breathwork",
+  "Brick Laying",
+  "Bridal Makeup",
+  "Brochure Design",
+  "Brushing and Bathing",
+  "Budget Forecasting",
+  "Budget Preparation",
+  "Buffet Attendants",
+  "Buffet Catering",
+  "Bug Patching",
+  "Bug Reporting",
+  "Business Analysis",
+  "Business Card Design",
+  "Buttercream Art",
+  "Buyer Tours",
+  "Cable Termination",
+  "CAD Drafting (Remote)",
+  "Cake Decorating",
+  "Calendar Management",
+  "Camera Install",
+  "Camera Mounting",
+  "Campaign Planning",
+  "Campaign Setup",
+  "Candidate Sourcing",
+  "Career Assessment",
+  "Career Coaching",
+  "Car Keys",
+  "Carpentry",
+  "Carpet Cleaning",
+  "Carpet Installation",
+  "Cat Boarding",
+  "Catering",
+  "Caulking",
+  "CCTV Installation",
+  "Centerpieces",
+  "Chain Link Fence",
+  "Chainsaw Repair",
+  "Chain Soldering",
+  "Character Animation",
+  "Character Illustration",
+  "Character Modeling",
+  "Character Poses",
+  "Character Voices",
+  "Chatbot Design",
+  "Chatbot Development",
+  "Chemical Balancing",
+  "Childcare",
+  "Chimney Repair",
+  "Chip Repair",
+  "Chiropractic Services",
+  "CI CD Pipeline",
+  "Circuit Breaker Replacement",
+  "City Walking Tours",
+  "Cleaning and Oiling",
+  "Cleanup Crew",
+  "Clock Repair",
+  "Closed Captions",
+  "Closet Organizing",
+  "Cloud Architecture",
+  "Club DJ",
+  "Cocktail Reception",
+  "Code Refactoring",
+  "Code Review",
+  "Color Consultation",
+  "Color Grading",
+  "Color Selection",
+  "Color Services",
+  "Combination Change",
+  "Commercial Mowing",
+  "Commercial Scripts",
+  "Commercial Voice Over",
+  "Commission Structure",
+  "Community Management",
+  "Companionship",
+  "Competitive Analysis",
+  "Competitive Training",
+  "Composite Decks",
+  "Computer Hardware Repair",
+  "Computer Vision Models",
+  "Concept Design",
+  "Concrete Demo",
+  "Concrete Work",
+  "Construction Debris",
+  "Construction Progress",
+  "Content Calendar",
+  "Content Writing",
+  "Contract Testing",
+  "Controller Programming",
+  "Conventional Oil",
+  "Conversational Flow",
+  "Conversation Practice",
+  "Conversion Tracking",
+  "Copywriting",
+  "Corporate Event DJ",
+  "Corporate Events",
+  "Corporate Videos",
+  "Costume Construction",
+  "Costume Design",
+  "Courier Services (local)",
+  "Cover Letter",
+  "CPR Training",
+  "Crack Sealing",
+  "CRM Administration",
+  "CRM Integration",
+  "CRM Setup",
+  "Cross Platform Apps",
+  "Crowd Control",
+  "Crown Reduction",
+  "Cushion Foam Replacement",
+  "Cushion Restuffing",
+  "Custom Cabinets",
+  "Custom Cakes",
+  "Customer Follow Up",
+  "Customer Support (Live Chat)",
+  "Custom Frames",
+  "Custom Upholstery",
+  "Cut and Trim",
+  "Cybersecurity Consulting",
+  "Daily Monitoring",
+  "Daily Walks",
+  "Damage Inspection",
+  "Dance Instruction",
+  "DApp Development",
+  "Dashboard Automation",
+  "Dashboard Creation",
+  "Data Analysis",
+  "Database Administration",
+  "Database Design",
+  "Data Cleaning",
+  "Data Engineering",
+  "Data Entry",
+  "Data Migration",
+  "Data Science & Analytics",
+  "Data Slides",
+  "Data Visualization",
+  "Data Warehouse Design",
+  "Daycare Service",
+  "Day Of Coordination",
+  "DCF Modeling",
+  "Deadwood Removal",
+  "Debris Cleanup",
+  "Debris Hauling",
+  "Debris Removal",
+  "Deck Building",
+  "Deck Cleaning",
+  "Decluttering",
+  "Decorative Stamping",
+  "Deep Tissue",
+  "De Installation",
+  "Delicates Care",
+  "Demolition",
+  "Dent Removal",
+  "Deodorizing",
+  "Deployment Automation",
+  "DevOps Engineering",
+  "Dialog Polishing",
+  "Dietary Assessment",
+  "Dietary Specific Menus",
+  "Digital Marketing Strategy",
+  "Dinner Parties",
+  "Disc Jockey (DJ)",
+  "Dish Mounting",
+  "Dishwasher Install",
+  "Dismantling",
+  "Distribution",
+  "Document Courier",
+  "Document Formatting & Desktop Publishing",
+  "Dog Boarding",
+  "Dog Training",
+  "Dog Walking",
+  "Door Installation",
+  "Downspout Flushing",
+  "Drain Cleaning",
+  "Dressage Training",
+  "Dressing Help",
+  "Dress Resizing",
+  "Drip Irrigation",
+  "Driveway Plowing",
+  "Driveway Pouring",
+  "Driveway Washing",
+  "Drone Photography",
+  "Dry Cleaning Pickup & Delivery",
+  "Dryer Repair",
+  "Drywall Installation",
+  "Drywall Repair",
+  "Duct Cleaning",
+  "DVR Setup",
+  "eBook Layout",
+  "eCommerce Store Setup & Management",
+  "Edging Services",
+  "Editing and Mastering",
+  "Editorial Illustration",
+  "Editorial Makeup",
+  "Elderly Care",
+  "Electrical Repair",
+  "Electrical Schematics",
+  "Electrical Systems",
+  "Email Management",
+  "Email Marketing",
+  "Emergency Lockout",
+  "Engine Diagnostics",
+  "Engine Maintenance",
+  "Engine Service",
+  "English Spanish Translation",
+  "English Tutoring",
+  "Engraving Services",
+  "Entry Screening",
+  "Episode Cutting",
+  "Episode Planning",
+  "Equine Training",
+  "Erection",
+  "ERP Consulting",
+  "Errand Running",
+  "Ethernet Cabling",
+  "ETL Pipeline Development",
+  "Evening Babysitting",
+  "Event Parking",
+  "Event Planning",
+  "Event Security",
+  "Event Servers",
+  "Event Videography",
+  "Excel & Spreadsheet Automation",
+  "Exhibit Explanation",
+  "Exhibit Lighting",
+  "Exit Sign Testing",
+  "Exotic Pet Boarding",
+  "Explainer Videos",
+  "Exterior Glass",
+  "Exterior Painting",
+  "Exterior Wash",
+  "Fabric Selection",
+  "Fact Checking",
+  "Feature Development",
+  "Feature Engineering",
+  "Feedback Reporting",
+  "Fence Installation",
+  "Fiber Pulling",
+  "Fiction Narration",
+  "Filter Cleaning",
+  "Filter Maintenance",
+  "Filter Replacement",
+  "Final Sweep",
+  "Financial Modeling",
+  "Finish Restoration",
+  "Fire Extinguisher Service",
+  "Fire Safety Inspection",
+  "Firewall Configuration",
+  "First Aid Training",
+  "Fitness Coaching (Online)",
+  "Fixture Installation",
+  "Flagging",
+  "Flatbed Towing",
+  "Flat Pack Assembly",
+  "Flat Tire Change",
+  "Floor Installation",
+  "Floor Safe",
+  "Floral Arrangement",
+  "Fluency Therapy",
+  "Fondant Design",
+  "Food Tours",
+  "Foreign Language Subtitles",
+  "Formula Optimization",
+  "Forum Moderation",
+  "Foundation Repair",
+  "Fragile Packing",
+  "Frame Repair",
+  "Frame Straightening",
+  "Framing",
+  "Front-End Development",
+  "Full Bar Service",
+  "Full Service Planning",
+  "Full-Stack Development",
+  "Full Time Nanny",
+  "Functional Testing",
+  "Fundraisers",
+  "Funnel Optimization",
+  "Furnace Install",
+  "Furnace Repair",
+  "Furniture Assembly",
+  "Furniture Moving",
+  "Furniture Rental",
+  "Furniture Repair",
+  "Furniture Sourcing",
+  "Furniture Upholstery",
+  "Gait Training",
+  "Gallery Hanging",
+  "Game Design",
+  "Game Development",
+  "Garage Attendant",
+  "Garage Door Repair",
+  "Garage Organizing",
+  "Garden Maintenance",
+  "Gas Optimization",
+  "Gear Tuning",
+  "Gel Manicure",
+  "Generative Models",
+  "Generator Service",
+  "Geospatial Analysis",
+  "Ghostwriting",
+  "Gift Shopping",
+  "GIS Mapping & Analysis",
+  "Glass Etching",
+  "Goal Setting",
+  "Google Ads Setup",
+  "Grammar Check",
+  "Grant Research",
+  "Grant Writing",
+  "Graphic Design",
+  "Grocery Runs",
+  "Groundwork Training",
+  "Group Walks",
+  "Grout Sealing",
+  "Growth Hacking",
+  "Guided Meditation",
+  "Guided Tours",
+  "Guitar Lessons",
+  "Guitar Lessons Online",
+  "Gutter Cleaning",
+  "Haircut and Styling",
+  "Haircuts",
+  "Hair Styling",
+  "Hand Therapy",
+  "Handyman Services",
+  "Hanging Boards",
+  "Hardscaping",
+  "Hardware Fitting",
+  "Hardware Setup",
+  "Hardwood Install",
+  "Hatha Yoga",
+  "Hazardous Waste",
+  "Hedge Trimming",
+  "Heel Replacement",
+  "Height Reduction",
+  "Hemming",
+  "High Security Keys",
+  "HIIT Workouts",
+  "Hip-Hop",
+  "Hive Removal",
+  "Hole Patching",
+  "Home Inspection",
+  "Home Organization",
+  "Home Pickup",
+  "Home Staging",
+  "Homework Help",
+  "Hoof Cleaning",
+  "Horse Grooming",
+  "Household Junk",
+  "Household Waste",
+  "House Keys",
+  "House Painting",
+  "House Siding Wash",
+  "How To Guides",
+  "HR Consulting & Recruitment",
+  "HTML CSS Coding",
+  "Hull Repair",
+  "HVAC Installation",
+  "HVAC Repair",
+  "Ice Melt Application",
+  "Icon Design",
+  "Illustration",
+  "Implementation Planning",
+  "Incident Response",
+  "Income Tax Filing",
+  "Infant Care",
+  "Infant CPR",
+  "Infographic Design",
+  "Infrastructure as Code",
+  "In Home Sitting",
+  "Insect Extermination",
+  "Insights Report",
+  "Inspection",
+  "Installation",
+  "Instrument Repair",
+  "Insulation Installation",
+  "Interaction Design",
+  "Interior Decorating",
+  "Interior Demo",
+  "Interior Door Hang",
+  "Interior Glass",
+  "Interior Painting",
+  "Interior Shampoo",
+  "Interview Prep",
+  "Inverter Wiring",
+  "iOS Apps",
+  "Ironing Services",
+  "Irrigation System Installation",
+  "IT On-Site Support",
+  "JavaScript Development",
+  "Jewelry Engraving",
+  "Jewelry Repair",
+  "Job Description Writing",
+  "Job Search Strategy",
+  "Joint Reinforcement",
+  "Jumping Lessons",
+  "Jump Starts",
+  "Junk Removal",
+  "Karate",
+  "Key Cutting",
+  "Keyword Research",
+  "Keyword Strategy",
+  "Kickboxing",
+  "Kinetic Typography",
+  "KPI Definition",
+  "Lab Sample Collection",
+  "Laminate Install",
+  "LAMP Stack",
+  "Landing Page Copy",
+  "Landscape Design",
+  "Landscaping",
+  "Lane Closure Setup",
+  "Language Tutoring",
+  "Laptop Hinge Fix",
+  "Launch Coordination",
+  "Laundry Services",
+  "Lawn Mower Repair",
+  "Lawn Mowing",
+  "Leak Repair",
+  "Leather Restoration",
+  "Legal Transcription",
+  "Leveling and EQ",
+  "Life Coaching",
+  "Lighting Rig",
+  "Lighting Technician",
+  "Light Programming",
+  "Linen Ironing",
+  "Link Building",
+  "LinkedIn Profile",
+  "List Segmentation",
+  "Litter Box Cleaning",
+  "Live Chat Support",
+  "Load In",
+  "Local Moves",
+  "Local Towing",
+  "Lock Installation",
+  "Lockout Service",
+  "Lock Rekeying",
+  "Locksmith Services",
+  "Logo & Brand Identity Design",
+  "Logo Design",
+  "Long Distance Moves",
+  "Long Form Articles",
+  "Machine Learning Engineering",
+  "Maintenance",
+  "Maintenance Updates",
+  "Makeup Artist",
+  "Map Creation",
+  "Market Analysis",
+  "Marketplace Listing",
+  "Market Research",
+  "Martial Arts Coaching",
+  "Masonry",
+  "Massage Therapy",
+  "Mast Installation",
+  "Mat Cutting",
+  "Math Tutoring",
+  "Mat Pilates",
+  "Meal Planning",
+  "Meal Prep",
+  "Measuring and Cutting",
+  "Mechanical Clock Repair",
+  "Mechanical Drawings",
+  "Memoirs",
+  "MERN Stack",
+  "Metadata Design",
+  "Meta Descriptions",
+  "Metal Fabrication",
+  "Migration Planning",
+  "MIG Welding",
+  "Mindfulness & Meditation Coaching",
+  "Minor Repair",
+  "Mobile App Development",
+  "Mobile Bar Setup",
+  "Mobile Phone Repair",
+  "Mobility Assistance",
+  "Model Deployment",
+  "Model Training",
+  "Mold Inspection",
+  "Monitoring Setup",
+  "Motherboard Repair",
+  "Motion Graphics",
+  "Motorcycle Repair",
+  "Mounting",
+  "Moving Services",
+  "Mulching",
+  "Museum Docent",
+  "Music Lessons",
+  "Music Lessons (Online)",
+  "Nail Art",
+  "Nail Technician",
+  "Nail Trimming",
+  "Nanny Services",
+  "Narration",
+  "Nature Hikes",
+  "Network Administration",
+  "Network Cabling Installation",
+  "Network Setup",
+  "Network Troubleshooting",
+  "NFT Creation & Management",
+  "NFT Minting",
+  "NLP Integration",
+  "NLP Models",
+  "Noise Reduction",
+  "Non Fiction Narration",
+  "Nutrition Coaching (Online)",
+  "Obedience Training",
+  "Occupational Therapy",
+  "Odor Treatment",
+  "Office Furniture Setup",
+  "Office Pickup",
+  "Oil Change Service",
+  "Online Tutoring (Academic)",
+  "On Site SEO",
+  "Opener Repair",
+  "Open House Hosting",
+  "Opinion Pieces",
+  "Outlet Repair",
+  "Oven Install",
+  "Overnight Care",
+  "Packing Services",
+  "Paint Correction",
+  "Paint Matching",
+  "Panel Mounting",
+  "Pantry Setup",
+  "Parcel Delivery",
+  "Parking and Retrieval",
+  "Parking Attendant",
+  "Part Time Nanny",
+  "Pastry Catering",
+  "Patina Preservation",
+  "Patio Cover Install",
+  "Patio Installation",
+  "Patrol Services",
+  "Pattern Making",
+  "Pattern Matching",
+  "Paver Patios",
+  "Payment Collection",
+  "Payment Gateway Integration",
+  "Pay-Per-Click (PPC) Management",
+  "Payroll Processing",
+  "Pediatric OT",
+  "Penetration Testing",
+  "Performance Tuning",
+  "Personal Care Assistant",
+  "Personal Development",
+  "Personalized Plans",
+  "Personal Training",
+  "Pest Control",
+  "Pet Grooming",
+  "Pet Sitting",
+  "Pet Waste Removal",
+  "Photo Editing",
+  "Photography",
+  "Physical Therapy",
+  "Piano Lessons",
+  "Piano Tuning",
+  "Picture Framing",
+  "Picture Hanging",
+  "Pilates Instruction",
+  "Pipe Installation",
+  "Pitch Decks",
+  "Pitch Raise",
+  "Plated Dinner",
+  "Plumbing",
+  "Podcast Editing",
+  "Podcast Production",
+  "Policy Enforcement",
+  "Pond Maintenance",
+  "Pool Cleaning",
+  "Portrait Photography",
+  "Post Construction",
+  "Post Scheduling",
+  "Post Surgery Rehab",
+  "Posture Correction",
+  "Predictive Modeling",
+  "Prenatal Massage",
+  "Prescription Pickup",
+  "Presentation & Slide Design",
+  "Pressure Treated Decks",
+  "Pressure Washing",
+  "Prevention Sealing",
+  "Private Chef",
+  "Process Mapping",
+  "Product Descriptions",
+  "Product Listing",
+  "Product Management",
+  "Product Modeling",
+  "Product Photography",
+  "Program Setup",
+  "Progress Reporting",
+  "Progress Tracking",
+  "Project Management",
+  "Projector Setup",
+  "Project Planning",
+  "Proofreading & Editing",
+  "Property Inspection",
+  "Prop Handling",
+  "Proposal Writing",
+  "Pruning",
+  "Pump Cleaning",
+  "Puppy Breaks",
+  "Puppy Training",
+  "QA Testing",
+  "Quality Assurance (QA) Testing",
+  "Quartz Movement Replace",
+  "Queue Management",
+  "Raccoon Removal",
+  "Railing Installation",
+  "Railings Fabrication",
+  "RAM Upgrade",
+  "Real Estate Showing Agent",
+  "Receiver Setup",
+  "Recharge",
+  "Recipe Ideas",
+  "Recording",
+  "Recycling Pickup",
+  "Reformer Pilates",
+  "Refresher Course",
+  "Refrigerator Repair",
+  "Regression Testing",
+  "Regulation",
+  "Relocation",
+  "Remote Desktop Support",
+  "Remote Viewing Config",
+  "Replacement Windows",
+  "Report Formatting",
+  "Reporting Dashboards",
+  "Requirement Gathering",
+  "Requirements Analysis",
+  "Residential Mowing",
+  "Residential Tint",
+  "Responsive Design",
+  "Resume & CV Writing",
+  "Resume Writing",
+  "Retention Strategies",
+  "Ring Resizing",
+  "Risk Management",
+  "Roadmap Planning",
+  "Roadside Assistance",
+  "Robotic Process Automation (RPA) Development",
+  "Rodent Control",
+  "ROI Assessment",
+  "Roof Antenna",
+  "Roofing",
+  "Roof Inspection",
+  "Safe Capture",
+  "Safe Installation",
+  "Sales Copy",
+  "Salsa",
+  "Same Day Delivery",
+  "Sanding",
+  "Sapling Planting",
+  "Satellite Dish Installation",
+  "Scaffolding Setup",
+  "Scene Sketches",
+  "Scenic Painting",
+  "Scratch Repair",
+  "Screen Cleaning",
+  "Screenplays",
+  "Screen Replacement",
+  "Scriptwriting",
+  "Sealant Application",
+  "Seam Rolling",
+  "Seam Sealing",
+  "Search Engine Optimization (SEO)",
+  "Seasonal Cleanup",
+  "Security Guard Services",
+  "Security Management",
+  "Security System Installation",
+  "Sensor Placement",
+  "SEO Blog Posts",
+  "SEO Content Writing",
+  "Set Construction",
+  "Set Design",
+  "Shaping Services",
+  "Shed Removal",
+  "Sheet Metal Bending",
+  "Shingle Replacement",
+  "Shipping API",
+  "Shirt Pressing",
+  "Shoe Repair",
+  "Shopify Setup",
+  "Shot Sequencing",
+  "Shower Tiling",
+  "Show Prep",
+  "Sidewalk Construction",
+  "Sidewalk Shoveling",
+  "Signage Placement",
+  "Signal Alignment",
+  "Signal Boosters",
+  "Signature Cocktails",
+  "Siren Setup",
+  "Site Assessment",
+  "Site Cleanup",
+  "Site Selection",
+  "Skimming Service",
+  "Small Engine Repair",
+  "Small Repairs",
+  "Smart Contract Coding",
+  "Smart Contract Development",
+  "Smart Home Integration",
+  "Snake Catching",
+  "Snake Identification",
+  "Snow Removal",
+  "Soccer Coach",
+  "Social Media Graphics",
+  "Social Media Management",
+  "Social Parties",
+  "Sod Installation",
+  "Sofa Reupholstery",
+  "Soft Tissue Therapy",
+  "Software Engineering",
+  "Software Testing & Bug Fixing",
+  "Software Troubleshooting",
+  "Solar Panel Installation",
+  "Sole Repair",
+  "Solidity Contracts",
+  "Sound Design & Mixing",
+  "Sound Effects",
+  "Sound System Rental",
+  "Space Planning",
+  "Spanish Tutoring",
+  "Special Effects",
+  "Speech Therapy",
+  "Speech Writing",
+  "Spinal Adjustment",
+  "Sports Coaching",
+  "Sports Injury Rehab",
+  "Spray Foam",
+  "Spring Replacement",
+  "Sprinkler Inspection",
+  "Sprinkler Setup",
+  "Squirrel Trapping",
+  "Stagehand",
+  "Stage Lighting Design",
+  "Stain Removal",
+  "Stain Treatment",
+  "Standard Tuning",
+  "Statistical Modeling",
+  "Steam Cleaning",
+  "Steam Ironing",
+  "Stone Patios",
+  "Stone Setting",
+  "Stone Veneer",
+  "Store Optimization",
+  "Storyboard Art",
+  "Storyboarding",
+  "Strength Training",
+  "Stress Management",
+  "Stretching",
+  "String Instrument Repair",
+  "Stroke Improvement",
+  "Stump Grinding",
+  "Style Consistency",
+  "Subtitle Addition",
+  "Subtitle Sync",
+  "Subtitling & Captioning",
+  "Sugar Flowers",
+  "Suit Alterations",
+  "Surface Prep",
+  "Surgical Prep",
+  "Survey Design",
+  "Suspension Work",
+  "Swedish Massage",
+  "Swim Instruction",
+  "Synthetic Oil",
+  "System Architecture",
+  "System Updates",
+  "Tailoring",
+  "Taping and Mudding",
+  "Tax Planning",
+  "Tax Preparation & Advice",
+  "Technical Drawing (Digital)",
+  "Technical Support",
+  "Technical Translation",
+  "Technical Writing",
+  "Template Creation",
+  "Template Design",
+  "Tennis Coach",
+  "Termite Treatment",
+  "Test Prep",
+  "Texture Matching",
+  "Thermostat Setup",
+  "Ticket Escalation",
+  "TIG Welding",
+  "Tile Setting",
+  "Tint Removal",
+  "Tire Change",
+  "Tire Installation",
+  "Token Creation",
+  "Tour Guide",
+  "Tow Truck Service",
+  "TPMS Reset",
+  "Track Alignment",
+  "Traffic Control",
+  "Training and Support",
+  "Transcription",
+  "Translation",
+  "Travel Nanny",
+  "Tree Planting",
+  "Tree Trimming",
+  "Trim Installation",
+  "Trim Work",
+  "Trophy Engraving",
+  "UI Optimization",
+  "Unit Testing",
+  "Unity Development",
+  "Unpacking Services",
+  "Updos",
+  "Upholstery Repair",
+  "User Engagement",
+  "User Manuals",
+  "User Research",
+  "User Stories",
+  "User Training",
+  "UX/UI Design",
+  "Vacation Sitting",
+  "Valet Parking",
+  "Valuation Models",
+  "VBA Macros",
+  "Vehicle Greeting",
+  "Vendor Management",
+  "Veneer Repair",
+  "Veterinary Technician",
+  "Video Editing",
+  "Videography",
+  "Video Transcription",
+  "Video Workouts",
+  "Vinyasa Flow",
+  "Vinyl Fence",
+  "Vinyl Plank Install",
+  "Virtual Assistance",
+  "Virtual Piano Lessons",
+  "Visitor Assistance",
+  "Visual Design",
+  "Vital Sign Monitoring",
+  "Vocal Coaching",
+  "Voice Acting",
+  "Voice Therapy",
+  "Voice Training",
+  "VPN Management",
+  "VR Experience",
+  "Vulnerability Assessment",
+  "Waitstaff Services",
+  "Wallpaper Installation",
+  "Wall Safe",
+  "Wall Stabilization",
+  "Wash and Fold",
+  "Washer Repair",
+  "Washer Setup",
+  "Wasp Nest Removal",
+  "Waste Disposal",
+  "Watch Repair",
+  "Water Change",
+  "Water Damage Repair",
+  "Water Resistance Testing",
+  "Water Testing",
+  "Weatherstripping",
+  "Web Development",
+  "Website Build",
+  "Website Copy",
+  "Website Localization",
+  "Wedding DJ",
+  "Wedding Flowers",
+  "Wedding Planning",
+  "Weeding",
+  "Weekly Meal Prep",
+  "Weight Loss Coaching",
+  "Welding",
+  "Wheel Truing",
+  "Whiteboard Animation",
+  "White Papers",
+  "Wilderness First Aid",
+  "Wildlife Control",
+  "Window Cleaning",
+  "Window Installation",
+  "Window Tinting",
+  "Windshield Install",
+  "Windshield Replacement",
+  "Wired Alarm",
+  "Wireframing",
+  "Wireless Alarm",
+  "Wiring Fix",
+  "Wood Fence",
+  "Wood Refinishing",
+  "Woodwind Repair",
+  "Workflow Automation",
+  "Workplace Ergonomics",
+  "Yard Scooping",
+  "Yard Waste",
+  "Yin Yoga",
+  "Yoga Instruction",
+  "Zipper Fix",
+];
+
+// Export categories without "All Categories" for specific use cases
+export const categoriesWithoutAll = jobCategories.filter(category => category !== "All Categories");
