@@ -44,7 +44,6 @@ Welcome to Jigz! This index helps you navigate our documentation and find the in
 | Document | Purpose | Audience |
 |----------|---------|----------|
 | [DEPLOYMENT_SUMMARY.md](DEPLOYMENT_SUMMARY.md) | Deployment project summary | Project managers |
-| [replit.md](replit.md) | Replit platform setup | Developers using Replit |
 
 ## 🎯 Quick Navigation by Task
 
@@ -72,7 +71,6 @@ Welcome to Jigz! This index helps you navigate our documentation and find the in
 
 ### 🗂️ Archive Candidates
 - [DEPLOYMENT_SUMMARY.md](DEPLOYMENT_SUMMARY.md) - Consider archiving after deployment
-- [replit.md](replit.md) - Platform-specific, may not be needed
 
 ## 🚨 Important Notes
 

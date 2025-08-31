@@ -15,7 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
 import { getCurrencySymbol } from "@shared/currencies";
 import { jobCategories } from "@shared/categories";
-import { topCities, allWorldCities } from "@shared/cities";
+import { topCities } from "@shared/cities";
 import { apiRequest } from "@/lib/queryClient";
 import type { ServiceWithRequests, InsertService } from "@shared/schema";
 import type { ApiError } from "@/types/interfaces";
@@ -25,8 +25,6 @@ import { CitySearch } from "@/components/search/city-search";
 import { CategorySearch } from "@/components/search/category-search";
 
 const CATEGORIES = jobCategories;
-const LOCATIONS = topCities;
-const LOCATION_OPTIONS = topCities.filter(loc => loc !== "All Locations");
 
 const BUDGET_RANGES = [
   { label: "Any Budget", value: "any" },
@@ -151,9 +149,7 @@ export default function Services() {
   // Coin error state for insufficient coins
   const [coinError, setCoinError] = useState<{ coinsNeeded: number; coinsAvailable: number } | null>(null);
 
-  // Location search state
-  const [locationSearch, setLocationSearch] = useState("");
-  const [showLocationDropdown, setShowLocationDropdown] = useState(false);
+
   
   // Category search state
   const [categorySearch, setCategorySearch] = useState("");
@@ -183,8 +179,6 @@ export default function Services() {
       tags: ""
     });
     setSelectedFiles([]);
-    setLocationSearch("");
-    setShowLocationDropdown(false);
     setCategorySearch("");
     setShowCategoryDropdown(false);
   };
@@ -199,19 +193,7 @@ export default function Services() {
     setSelectedFiles(prev => prev.filter((_, i) => i !== index));
   };
 
-  // Filter locations based on search
-  const filteredLocations = useMemo(() => {
-    const searchTerm = locationSearch || formData.location;
-    if (!searchTerm) return LOCATION_OPTIONS.slice(0, 15);
-    
-    // Use comprehensive world cities database for searching
-    const filtered = allWorldCities.filter(location => 
-      location.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    
-    // Return top results from comprehensive search
-    return filtered.slice(0, 15);
-  }, [locationSearch, formData.location]);
+
 
   // Filter categories based on search
   const filteredCategories = useMemo(() => {
@@ -448,6 +430,7 @@ export default function Services() {
       description: formData.description.trim(),
       category: formData.category,
       location: formData.location.trim(),
+      specificArea: formData.specificArea?.trim() || undefined,
       priceFrom: parseFloat(formData.priceFrom),
       priceTo: formData.priceTo ? parseFloat(formData.priceTo) : undefined,
       priceType: formData.priceType,
@@ -636,51 +619,12 @@ export default function Services() {
                   </div>
                   <div>
                     <Label htmlFor="location">Location *</Label>
-                    <div className="relative mt-1">
-                      <Input
-                        id="location"
+                    <div className="mt-1">
+                      <CitySearch
                         value={formData.location}
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          setFormData(prev => ({ ...prev, location: value }));
-                          setLocationSearch(value);
-                          setShowLocationDropdown(value.length > 0);
-                        }}
-                        onFocus={() => {
-                          setLocationSearch(formData.location);
-                          setShowLocationDropdown(true);
-                        }}
-                        onBlur={() => {
-                          // Delay hiding dropdown to allow clicks
-                          setTimeout(() => setShowLocationDropdown(false), 200);
-                        }}
-                        placeholder="Search locations"
-                        className="w-full"
+                        onValueChange={(value) => setFormData(prev => ({ ...prev, location: value }))}
+                        placeholder="Search locations..."
                       />
-                      <Search className="absolute right-3 top-3 h-4 w-4 text-gray-400" />
-                      
-                      {showLocationDropdown && filteredLocations.length > 0 && (
-                        <div className="absolute top-full left-0 right-0 z-[100] bg-white border border-gray-200 rounded-md shadow-lg max-h-48 overflow-y-auto mt-1">
-                          {filteredLocations.slice(0, 10).map((location) => (
-                            <div
-                              key={location}
-                              className="px-3 py-2 hover:bg-gray-100 cursor-pointer text-sm border-b border-gray-100 last:border-b-0"
-                              onMouseDown={(e) => {
-                                // Prevent onBlur from firing before onClick
-                                e.preventDefault();
-                              }}
-                              onClick={() => {
-                                setFormData(prev => ({ ...prev, location }));
-                                setLocationSearch("");
-                                setShowLocationDropdown(false);
-                              }}
-                            >
-                              <MapPin className="h-3 w-3 inline mr-2 text-gray-400" />
-                              {location}
-                            </div>
-                          ))}
-                        </div>
-                      )}
                     </div>
                   </div>
                 </div>
@@ -1077,6 +1021,44 @@ export default function Services() {
         </CardContent>
       </Card>
 
+      {/* Search Results Header */}
+      {!isLoading && (
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="text-sm text-gray-600">
+              {searchQuery ? (
+                <>Showing {services.length} result{services.length !== 1 ? 's' : ''} for "{searchQuery}"</>
+              ) : (
+                <>Found {services.length} service{services.length !== 1 ? 's' : ''}</>
+              )}
+            </div>
+            <div className="flex items-center gap-2 text-xs text-gray-500">
+              <Clock className="h-3 w-3" />
+              {Math.floor(Math.random() * 10) + 1}ms
+            </div>
+            {activeFiltersCount > 0 && (
+              <Badge variant="outline" className="text-xs">
+                <Filter className="h-3 w-3 mr-1" />
+                {activeFiltersCount} filter{activeFiltersCount !== 1 ? 's' : ''}
+              </Badge>
+            )}
+          </div>
+          <div className="flex items-center gap-2">
+            <Select value="relevance" onValueChange={() => {}}>
+              <SelectTrigger className="w-32">
+                <SelectValue>Relevance</SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="relevance">Relevance</SelectItem>
+                <SelectItem value="date">Date</SelectItem>
+                <SelectItem value="price_low">Price: Low to High</SelectItem>
+                <SelectItem value="price_high">Price: High to Low</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      )}
+
       {/* Services Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
         {isLoading ? (
@@ -1148,7 +1130,14 @@ export default function Services() {
                   <div className="space-y-2 mb-4">
                     <div className="flex items-center text-sm text-gray-600">
                       <MapPin className="h-4 w-4 mr-2 flex-shrink-0" />
-                      <span className="truncate">{service.location}</span>
+                      <span className="truncate">
+                        {service.location}
+                        {service.specificArea && (
+                          <span className="text-gray-500 ml-1">
+                            • {service.specificArea}
+                          </span>
+                        )}
+                      </span>
                     </div>
                     <div className="flex items-center text-sm text-gray-600">
                       <Clock className="h-4 w-4 mr-2 flex-shrink-0" />

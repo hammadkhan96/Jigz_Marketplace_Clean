@@ -1,6 +1,5 @@
 import { Response } from "express";
 
-// Stub implementation to replace Replit-dependent object storage
 // TODO: Implement proper object storage solution (e.g., AWS S3, Google Cloud Storage, or local file system)
 
 export class ObjectNotFoundError extends Error {

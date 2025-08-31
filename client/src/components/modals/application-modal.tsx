@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+// import { zodResolver } from "@hookform/resolvers/zod"; // No longer needed
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -57,7 +57,7 @@ export default function ApplicationModal({ isOpen, onClose, job }: ApplicationMo
   });
 
   const form = useForm<ApplicationFormData>({
-    resolver: zodResolver(applicationFormSchema),
+    // resolver: zodResolver(applicationFormSchema), // Disabled validation
     defaultValues: {
       jobId: "",
       bidAmount: undefined,
@@ -109,12 +109,17 @@ export default function ApplicationModal({ isOpen, onClose, job }: ApplicationMo
   });
 
   const onSubmit = (data: ApplicationFormData) => {
-    if (!job) return;
-    
-    createApplicationMutation.mutate({
+    if (!job) {
+      return;
+    }
+
+    const applicationData = {
       ...data,
       jobId: job.id,
-    });
+    };
+
+    console.log("Submitting application data:", applicationData);
+    createApplicationMutation.mutate(applicationData);
   };
 
   const currencySymbol = getCurrencySymbol(job?.currency);
@@ -283,9 +288,11 @@ export default function ApplicationModal({ isOpen, onClose, job }: ApplicationMo
                   className="mt-1"
                 />
                 <p className="text-xs text-gray-500 mt-1">Suggest a fair price for this job</p>
+                {/* Validation errors disabled
                 {form.formState.errors.bidAmount && (
                   <p className="text-sm text-red-600 mt-1">{form.formState.errors.bidAmount.message}</p>
                 )}
+                */}
               </div>
 
               {/* Message */}
@@ -304,9 +311,11 @@ export default function ApplicationModal({ isOpen, onClose, job }: ApplicationMo
                   className="mt-1 resize-none"
                   maxLength={1500}
                 />
+                {/* Validation errors disabled
                 {form.formState.errors.message && (
                   <p className="text-sm text-red-600 mt-1">{form.formState.errors.message.message}</p>
                 )}
+                */}
               </div>
 
               {/* Experience */}
@@ -366,9 +375,11 @@ export default function ApplicationModal({ isOpen, onClose, job }: ApplicationMo
                     </div>
                   </div>
                 )}
+                {/* Validation errors disabled
                 {form.formState.errors.coinsBid && (
                   <p className="text-sm text-red-600 mt-1">{form.formState.errors.coinsBid.message}</p>
                 )}
+                */}
               </div>
 
               {/* Form Actions */}

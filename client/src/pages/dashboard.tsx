@@ -1796,11 +1796,11 @@ export default function Dashboard() {
                                 </Button>
                               )}
                               
-                              {request.status === "accepted" && request.completedAt && serviceRatingEligibility[`${service.id}-${request.id}`]?.hasRated && (
+                              {request.status === "accepted" && !request.completedAt && serviceRatingEligibility[`${service.id}-${request.id}`]?.hasRated && (
                                 <Badge variant="secondary" className="bg-green-100 text-green-800 w-fit">
                                   <CheckCircle className="h-4 w-4 mr-1" />
-                                  <span className="hidden sm:inline">Completed & Rated</span>
-                                  <span className="sm:hidden">Done</span>
+                                  <span className="hidden sm:inline">Client Rated</span>
+                                  <span className="sm:hidden">Rated</span>
                                 </Badge>
                               )}
                               
@@ -1809,6 +1809,14 @@ export default function Dashboard() {
                                   <CheckCircle className="h-4 w-4 mr-1" />
                                   <span className="hidden sm:inline">Job Completed</span>
                                   <span className="sm:hidden">Complete</span>
+                                </Badge>
+                              )}
+                              
+                              {request.status === "accepted" && request.completedAt && serviceRatingEligibility[`${service.id}-${request.id}`]?.hasRated && (
+                                <Badge variant="secondary" className="bg-green-100 text-green-800 w-fit">
+                                  <CheckCircle className="h-4 w-4 mr-1" />
+                                  <span className="hidden sm:inline">Completed & Rated</span>
+                                  <span className="sm:hidden">Done</span>
                                 </Badge>
                               )}
                             </div>

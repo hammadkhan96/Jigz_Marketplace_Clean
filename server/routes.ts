@@ -800,6 +800,63 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Mark job as completed
+  app.patch("/api/jobs/:jobId/complete", requireAuth, async (req, res) => {
+    try {
+      const jobId = req.params.jobId;
+      const userId = (req.user as any).id;
+      
+      // Verify the user owns this job
+      const job = await storage.getJob(jobId);
+      if (!job) {
+        return res.status(404).json({ message: "Job not found" });
+      }
+      
+      if (job.userId !== userId) {
+        return res.status(403).json({ message: "Only the job owner can mark this job as completed" });
+      }
+      
+      // Check if job is already completed
+      if (job.status === "completed") {
+        return res.status(400).json({ message: "Job is already marked as completed" });
+      }
+      
+      // Update job status to completed
+      const updatedJob = await storage.updateJob(jobId, { status: "completed" });
+      
+      // Get all accepted applications for this job to notify freelancers
+      const applications = await storage.getApplicationsByJobId(jobId);
+      const acceptedApplications = applications.filter(app => app.status === "accepted");
+      
+              // Send completion notifications to all accepted freelancers
+        for (const application of acceptedApplications) {
+          const freelancer = await storage.getUser(application.userId);
+          if (freelancer && freelancer.email) {
+            try {
+              await emailService.sendJobCompletionEmail(
+                freelancer.email,
+                freelancer.name || freelancer.username,
+                job.title,
+                new Date().toLocaleDateString(),
+                false // isService = false for jobs
+              );
+            } catch (emailError) {
+              console.error("Failed to send job completion email:", emailError);
+              // Don't fail the request if email fails
+            }
+          }
+        }
+      
+      res.json({ 
+        message: "Job marked as completed successfully",
+        job: updatedJob
+      });
+    } catch (error) {
+      console.error("Error marking job as completed:", error);
+      res.status(500).json({ message: "Failed to mark job as completed" });
+    }
+  });
+
   // ============================================================================
   // JOB APPLICATION ENDPOINTS
   // ============================================================================
@@ -819,7 +876,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const userId = (req.user as any).id;
       
-      const applicationData = insertApplicationSchema.parse(req.body);
+      // Create a request schema that doesn't require userId (it will be added from auth)
+      const applicationRequestSchema = insertApplicationSchema.omit({ userId: true });
+      
+      // Validate the request body without userId
+      const validatedRequest = applicationRequestSchema.parse(req.body);
+      
+      // Add userId from authenticated user and ensure proper types
+      const applicationData = {
+        ...validatedRequest,
+        userId: userId,
+        bidAmount: Math.round(validatedRequest.bidAmount || 0), // Ensure integer
+        coinsBid: Math.round(validatedRequest.coinsBid || 0),   // Ensure integer
+        message: validatedRequest.message || "",                 // Ensure string
+        experience: validatedRequest.experience || ""            // Ensure string
+      };
       const coinsBid = applicationData.coinsBid || 0;
       
       // Calculate total coins needed: 1 for application + coins for bidding
@@ -852,6 +923,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const applicant = await storage.getUser(userId);
       
       if (job && applicant) {
+        // Get job poster's user information for email
+        const jobPoster = await storage.getUser(job.userId);
+        
         const bidMessage = coinsBid > 0 ? ` (bid: ${coinsBid} coins for priority ranking)` : '';
         await storage.createNotification({
           userId: job.userId, // job poster's ID
@@ -861,6 +935,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
           title: "New Application Received!",
           message: `${applicant.name} has applied to your job "${job.title}"${bidMessage}. Check your dashboard to review their application.`
         });
+
+        // Send email notification to job poster
+        if (jobPoster && jobPoster.email) {
+          try {
+            await emailService.sendJobApplicationNotification(
+              jobPoster.email,        // job poster's email
+              jobPoster.name,         // job poster's name  
+              job.title,              // job title
+              applicant.name          // applicant's name
+            );
+          } catch (emailError) {
+            console.error("Failed to send job application notification email:", emailError);
+            // Don't fail the request if email fails
+          }
+        }
       }
       
       res.status(201).json(application);
@@ -1841,6 +1930,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const serviceId = req.params.id;
       
       const service = await storage.approveService(serviceId, userId);
+      
+      // Send approval email notification to service provider
+      if (service && service.userId) {
+        try {
+          const serviceProvider = await storage.getUser(service.userId);
+          if (serviceProvider && serviceProvider.email) {
+            await emailService.sendServiceApprovalEmail(
+              serviceProvider.email,
+              serviceProvider.name || serviceProvider.username,
+              service.title
+            );
+          }
+        } catch (emailError) {
+          console.error("Failed to send service approval email:", emailError);
+          // Don't fail the request if email fails
+        }
+      }
+      
       res.json(service);
     } catch (error) {
       console.error("Error approving service:", error);
@@ -2500,6 +2607,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Send password reset email
       if (emailService.isConfigured()) {
         const resetLink = getPasswordResetUrl(resetToken);
+        console.log('Password reset link generated:', resetLink);
+        console.log('Token generated:', resetToken);
         await emailService.sendPasswordResetEmail(user.email, user.name, resetLink);
       }
 
@@ -2513,15 +2622,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/auth/reset-password", async (req, res) => {
     try {
       const { token, password } = passwordResetSchema.parse(req.body);
+      console.log('Reset password request received with token:', token);
 
       // Find user by reset token
       const user = await storage.getUserByResetToken(token);
+      console.log('User found by token:', user ? user.id : 'No user found');
+      
       if (!user || !user.passwordResetExpires) {
+        console.log('Invalid or missing reset token/expires');
         return res.status(400).json({ message: "Invalid or expired reset token" });
       }
 
       // Check if token has expired
       if (new Date() > user.passwordResetExpires) {
+        console.log('Token expired at:', user.passwordResetExpires);
         // Clear expired token
         await storage.clearPasswordResetToken(user.id);
         return res.status(400).json({ message: "Reset token has expired" });
@@ -2717,7 +2831,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
               plan.coins,
               plan.price,
               nextBillingDate.toLocaleDateString()
-            ).catch(error => console.error('Failed to send subscription welcome email:', error));
+            ).catch(error => {
+              console.error('Failed to send subscription welcome email:', error);
+              // Don't fail the request if email fails
+            });
+            
+            console.log(`Subscription welcome email sent to ${user.email} for ${planType} plan`);
           }
         } else {
           // This is a one-time coin purchase - send purchase confirmation email
@@ -3008,6 +3127,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Update subscription status to canceled
       const canceledAt = new Date();
       await storage.updateCoinSubscriptionStatus(subscription.id, "canceled", canceledAt);
+      
+      // Send cancellation email notification
+      const user = await storage.getUser(userId);
+      if (user && user.email) {
+        try {
+          await emailService.sendSubscriptionCancellationEmail(
+            user.email,
+            user.name || user.username,
+            subscription.planType,
+            canceledAt.toLocaleDateString()
+          );
+        } catch (emailError) {
+          console.error("Failed to send subscription cancellation email:", emailError);
+          // Don't fail the request if email fails
+        }
+      }
       
       res.json({ 
         message: "Subscription canceled successfully. You will retain access until the end of your current billing period.",
@@ -3649,6 +3784,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Service request endpoint
   app.post("/api/services/:serviceId/requests", requireAuth, async (req, res) => {
     try {
+      console.log("Service inquiry route hit:", { serviceId: req.params.serviceId, userId: (req.user as any).id });
       const userId = (req.user as any).id;
       const { serviceId } = req.params;
       const requestData = req.body;
@@ -3674,6 +3810,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Get service details for notification
       const service = await storage.getService(serviceId);
+      console.log("Service lookup result:", { serviceId, service: service ? { id: service.id, title: service.title, userId: service.userId } : null });
       if (service) {
         // Create notification for the service owner
         await storage.createNotification({
@@ -3685,65 +3822,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
           serviceRequestId: serviceRequest.id
         });
 
+        console.log("Notification created, now looking up users for email");
+        
         // Send email notification to service provider
         const serviceProvider = await storage.getUser(service.userId);
         const requester = await storage.getUser(userId);
         
+        console.log("Service inquiry email debug:", {
+          serviceProvider: serviceProvider ? { id: serviceProvider.id, email: serviceProvider.email, name: serviceProvider.name } : null,
+          requester: requester ? { id: requester.id, name: requester.name } : null,
+          serviceTitle: service.title,
+          message: validatedData.message
+        });
+        
         if (serviceProvider && serviceProvider.email && requester) {
           try {
-            await emailService.sendEmail({
-              to: serviceProvider.email,
-              subject: `New Service Inquiry - ${service.title}`,
-              html: `
-                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                  <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; text-align: center;">
-                    <h1 style="margin: 0; font-size: 24px;">New Service Inquiry!</h1>
-                  </div>
-                  
-                  <div style="padding: 30px; background-color: #f9f9f9;">
-                    <h2 style="color: #333; margin-bottom: 20px;">Hello ${serviceProvider.name},</h2>
-                    
-                    <p style="color: #555; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
-                      Great news! Someone is interested in your service on Jigz.
-                    </p>
-                    
-                    <div style="background: white; border-radius: 8px; padding: 20px; margin: 20px 0; border-left: 4px solid #667eea;">
-                      <h3 style="color: #333; margin-top: 0;">Service: ${service.title}</h3>
-                      <p style="color: #666; margin: 5px 0;"><strong>Inquirer:</strong> ${requester.name}</p>
-                      <p style="color: #666; margin: 5px 0;"><strong>Message:</strong> ${validatedData.message || 'No message provided'}</p>
-                    </div>
-                    
-                    <p style="color: #555; font-size: 16px; line-height: 1.6; margin-bottom: 25px;">
-                      You can view the full details and respond to this inquiry by logging into your Jigz dashboard.
-                    </p>
-                    
-                    <div style="text-align: center; margin: 30px 0;">
-                      <a href="${process.env.FRONTEND_URL || 'http://localhost:5000'}/dashboard" 
-                         style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-                                color: white; 
-                                padding: 12px 30px; 
-                                text-decoration: none; 
-                                border-radius: 25px; 
-                                font-weight: bold;
-                                display: inline-block;">
-                        View Dashboard
-                      </a>
-                    </div>
-                    
-                    <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center;">
-                      <p style="color: #888; font-size: 14px; margin: 0;">
-                        This email was sent because you have a service listed on Jigz.<br>
-                        <a href="${process.env.FRONTEND_URL || 'http://localhost:5000'}" style="color: #667eea;">Visit Jigz</a>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              `
-            });
+            console.log("Attempting to send service inquiry email to:", serviceProvider.email);
+            const emailResult = await emailService.sendServiceInquiryEmail(
+              serviceProvider.email,
+              serviceProvider.name || serviceProvider.username,
+              service.title,
+              requester.name || requester.username,
+              validatedData.message || 'No message provided'
+            );
+            console.log("Service inquiry email result:", emailResult);
           } catch (emailError) {
             console.error("Failed to send service inquiry email:", emailError);
             // Don't fail the request if email fails
           }
+        } else {
+          console.log("Cannot send email - missing data:", {
+            hasServiceProvider: !!serviceProvider,
+            hasEmail: !!(serviceProvider && serviceProvider.email),
+            hasRequester: !!requester
+          });
         }
       }
 
@@ -3816,55 +3928,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         // Send email notification to client
         try {
-          await emailService.sendEmail({
-            to: client.email,
-            subject: `Service Request Accepted - ${service.title}`,
-            html: `
-              <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                <div style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white; padding: 20px; text-align: center;">
-                  <h1 style="margin: 0; font-size: 24px;">Service Request Accepted!</h1>
-                </div>
-                
-                <div style="padding: 30px; background-color: #f9f9f9;">
-                  <h2 style="color: #333; margin-bottom: 20px;">Great news, ${client.name}!</h2>
-                  
-                  <p style="color: #555; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
-                    Your service request has been accepted by the service provider.
-                  </p>
-                  
-                  <div style="background: white; border-radius: 8px; padding: 20px; margin: 20px 0; border-left: 4px solid #22c55e;">
-                    <h3 style="color: #333; margin-top: 0;">Service: ${service.title}</h3>
-                    <p style="color: #666; margin: 5px 0;"><strong>Provider:</strong> Service Provider</p>
-                    <p style="color: #666; margin: 5px 0;"><strong>Status:</strong> Accepted</p>
-                  </div>
-                  
-                  <p style="color: #555; font-size: 16px; line-height: 1.6; margin-bottom: 25px;">
-                    You can now communicate with the service provider and coordinate the work details.
-                  </p>
-                  
-                  <div style="text-align: center; margin: 30px 0;">
-                    <a href="${process.env.FRONTEND_URL || 'http://localhost:5000'}/messages" 
-                       style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); 
-                              color: white; 
-                              padding: 12px 30px; 
-                              text-decoration: none; 
-                              border-radius: 25px; 
-                              font-weight: bold;
-                              display: inline-block;">
-                      Go to Messages
-                    </a>
-                  </div>
-                  
-                  <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center;">
-                    <p style="color: #888; font-size: 14px; margin: 0;">
-                      This email was sent because you made a service request on Jigz.<br>
-                      <a href="${process.env.FRONTEND_URL || 'http://localhost:5000'}" style="color: #22c55e;">Visit Jigz</a>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            `
-          });
+          await emailService.sendServiceRequestAcceptedEmail(
+            client.email,
+            client.name || client.username,
+            service.title,
+            serviceProvider.username || 'Service Provider'
+          );
         } catch (emailError) {
           console.error("Failed to send service acceptance email:", emailError);
           // Don't fail the request if email fails
@@ -3979,50 +4048,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         // Send email notification to client
         try {
-          await emailService.sendEmail({
-            to: client.email,
-            subject: `Service Completed - ${service.title}`,
-            html: `
-              <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                <div style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; padding: 20px; text-align: center;">
-                  <h1 style="margin: 0; font-size: 24px;">Service Completed!</h1>
-                </div>
-                
-                <div style="padding: 30px; background-color: #f9f9f9;">
-                  <h2 style="color: #333; margin-bottom: 20px;">Great news, ${client.name}!</h2>
-                  
-                  <p style="color: #555; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
-                    Your service has been completed by the service provider.
-                  </p>
-                  
-                  <div style="background: white; border-radius: 8px; padding: 20px; margin: 20px 0; border-left: 4px solid #3b82f6;">
-                    <h3 style="color: #333; margin-top: 0;">Service: ${service.title}</h3>
-                    <p style="color: #666; margin: 10px 0;">The service provider has marked your service as completed. You can now review their work and rate their service.</p>
-                  </div>
-                  
-                  <div style="text-align: center; margin: 30px 0;">
-                    <a href="${process.env.FRONTEND_URL || 'http://localhost:5000'}/dashboard" 
-                       style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); 
-                              color: white; 
-                              padding: 12px 30px; 
-                              text-decoration: none; 
-                              border-radius: 25px; 
-                              font-weight: bold;
-                              display: inline-block;">
-                      Review Service
-                    </a>
-                  </div>
-                  
-                  <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center;">
-                    <p style="color: #888; font-size: 14px; margin: 0;">
-                      This email was sent because your service was completed on Jigz.<br>
-                      <a href="${process.env.FRONTEND_URL || 'http://localhost:5000'}" style="color: #3b82f6;">Visit Jigz</a>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            `
-          });
+          await emailService.sendJobCompletionEmail(
+            client.email,
+            client.name || client.username,
+            service.title,
+            new Date().toLocaleDateString(),
+            true // isService = true for services
+          );
         } catch (emailError) {
           console.error("Failed to send service completion email:", emailError);
           // Don't fail the request if email fails

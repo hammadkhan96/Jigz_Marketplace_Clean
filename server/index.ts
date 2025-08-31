@@ -3,7 +3,7 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { emailService } from "./email";
-import { helmetConfig, corsConfig, generalRateLimit, authRateLimit, apiRateLimit } from './middleware/security';
+import { helmetConfig, corsConfig } from './middleware/security';
 import { 
   requestLogger, 
   performanceMonitor, 
@@ -67,17 +67,17 @@ app.use((req, res, next) => {
   // Initialize email service
   await emailService.initialize();
   
-  // Apply rate limiting after server initialization
-  app.use(generalRateLimit);
+  // Rate limiting disabled - commented out to remove "too many requests" errors
+  // app.use(generalRateLimit);
   
-  // Specific rate limiting for auth endpoints
-  app.use('/api/auth/login', authRateLimit);
-  app.use('/api/auth/register', authRateLimit);
-  app.use('/api/auth/forgot-password', authRateLimit);
-  app.use('/api/auth/reset-password', authRateLimit);
+  // Specific rate limiting for auth endpoints - disabled
+  // app.use('/api/auth/login', authRateLimit);
+  // app.use('/api/auth/register', authRateLimit);
+  // app.use('/api/auth/forgot-password', authRateLimit);
+  // app.use('/api/auth/reset-password', authRateLimit);
 
-  // API rate limiting for all API routes
-  app.use('/api/', apiRateLimit);
+  // API rate limiting for all API routes - disabled
+  // app.use('/api/', apiRateLimit);
   
   const server = await registerRoutes(app);
 

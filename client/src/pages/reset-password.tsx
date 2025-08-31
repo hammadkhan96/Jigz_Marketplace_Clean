@@ -24,18 +24,23 @@ export default function ResetPassword() {
 
   useEffect(() => {
     // Extract token from URL parameters
-    const urlParams = new URLSearchParams(location.split('?')[1] || '');
+    const urlParams = new URLSearchParams(window.location.search);
     const tokenParam = urlParams.get('token');
+    console.log('Reset password page loaded');
+    console.log('URL search:', window.location.search);
+    console.log('Token extracted:', tokenParam);
+    
     if (tokenParam) {
       setToken(tokenParam);
     } else {
+      console.error('No token found in URL');
       toast({
         title: "Invalid Link",
         description: "The password reset link is invalid or missing the token.",
         variant: "destructive",
       });
     }
-  }, [location, toast]);
+  }, [toast]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

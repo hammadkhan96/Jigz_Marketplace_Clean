@@ -134,7 +134,7 @@ export default function MessagesPage() {
         </Card>
 
         {/* Message Interface */}
-        <Card className="md:col-span-2">
+        <Card className="md:col-span-2 flex flex-col">
           {selectedConversation ? (
             <MessagingInterface
               conversation={selectedConversation}

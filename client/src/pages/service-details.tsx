@@ -499,7 +499,14 @@ export default function ServiceDetailsPage() {
                         <MapPin className="h-5 w-5 mr-2 text-gray-600" />
                         <span className="font-semibold text-gray-900">Service Area</span>
                       </div>
-                      <p className="text-gray-600">{service.location}</p>
+                      <p className="text-gray-600">
+                        {service.location}
+                        {service.specificArea && (
+                          <span className="text-gray-500 ml-2">
+                            • {service.specificArea}
+                          </span>
+                        )}
+                      </p>
                     </div>
 
 
@@ -646,11 +653,14 @@ export default function ServiceDetailsPage() {
                       <RatingDisplay 
                         rating={providerReviews && providerReviews.length > 0 ? 
                           providerReviews.reduce((acc, review) => acc + review.rating, 0) / providerReviews.length : 
-                          4.8
+                          0
                         }
                         totalReviews={providerReviews?.length || 0}
                         size="sm"
                       />
+                      {(!providerReviews || providerReviews.length === 0) && (
+                        <span className="text-sm text-gray-500 ml-1">(No reviews yet)</span>
+                      )}
                     </div>
                     <div className="flex items-center gap-2 text-sm text-green-600">
                       <div className="w-2 h-2 bg-green-500 rounded-full"></div>
@@ -672,10 +682,12 @@ export default function ServiceDetailsPage() {
                       <div className="text-2xl font-bold text-amber-600 mb-1">
                         {providerReviews && providerReviews.length > 0 ? 
                           (providerReviews.reduce((acc, review) => acc + review.rating, 0) / providerReviews.length).toFixed(1) : 
-                          "4.8"
+                          "No reviews"
                         }
                       </div>
-                      <div className="text-sm text-gray-600 font-medium">Average Rating</div>
+                      <div className="text-sm text-gray-600 font-medium">
+                        {providerReviews && providerReviews.length > 0 ? "Average Rating" : "No Reviews Yet"}
+                      </div>
                     </div>
                   </div>
                 )}

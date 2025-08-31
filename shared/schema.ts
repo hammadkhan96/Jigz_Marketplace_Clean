@@ -305,6 +305,7 @@ export const insertServiceSchema = createInsertSchema(services).omit({
 }).extend({
   title: z.string().min(1, "Title is required").max(100, "Title cannot exceed 100 characters"),
   description: z.string().min(1, "Description is required").max(1500, "Description cannot exceed 1500 characters"),
+  specificArea: z.string().optional(),
   priceFrom: z.number().min(1, "Starting price must be at least $1"),
   priceTo: z.number().min(1).optional(),
   availableSlots: z.number().min(1, "Must have at least 1 available slot").max(100, "Cannot exceed 100 slots"),

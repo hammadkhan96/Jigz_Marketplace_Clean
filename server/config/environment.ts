@@ -19,8 +19,8 @@ export const getBaseUrl = (): string => {
     throw new Error('FRONTEND_URL or DEPLOYED_URL environment variable must be set in production');
   }
   
-  // Development fallback
-  return 'http://localhost:5000';
+  // Development fallback - use frontend dev server port
+  return 'http://localhost:3000';
 };
 
 export const getApiBaseUrl = (): string => {

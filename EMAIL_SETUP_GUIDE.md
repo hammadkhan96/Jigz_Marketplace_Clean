@@ -31,8 +31,6 @@ I've set up a complete email verification system for Jigz. Here's how to configu
 
 ### 2. Set Environment Variables
 
-Add these to your Replit Secrets or .env file:
-
 ```bash
 # Required for any provider
 EMAIL_PROVIDER=gmail          # or 'sendgrid', 'mailgun', 'outlook', 'yahoo'

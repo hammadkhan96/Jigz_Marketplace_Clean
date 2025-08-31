@@ -887,43 +887,52 @@ The Jigz Team
           .header { background: #3b82f6; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
           .logo { max-width: 150px; height: auto; margin-bottom: 10px; }
           .content { background: #f8fafc; padding: 30px; border-radius: 0 0 8px 8px; }
-          .highlight { background: #e0f2fe; padding: 20px; border-radius: 8px; margin: 20px 0; }
-          .coins-box { background: #f0f9ff; border: 2px solid #3b82f6; padding: 15px; border-radius: 8px; text-align: center; margin: 20px 0; }
+          .highlight { background: #e0f2fe; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #3b82f6; }
+          .coins-box { background: #f0f9ff; border: 2px solid #3b82f6; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0; }
           .footer { text-align: center; margin-top: 20px; color: #666; font-size: 14px; }
-          .benefit { padding: 5px 0; }
+          .benefit { padding: 8px 0; }
           .benefit::before { content: "✓ "; color: #10b981; font-weight: bold; }
+          .cta-button { display: inline-block; background: #3b82f6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin: 20px 0; font-weight: bold; }
+          .info-box { background: #f9fafb; padding: 15px; border-radius: 8px; margin: 15px 0; border: 1px solid #e5e7eb; }
         </style>
       </head>
       <body>
         <div class="container">
           <div class="header">
             <img src="${baseUrl}/attached_assets/JIGZ%20LOGO-01_1754969521380.jpg" alt="Jigz Logo" class="logo" />
-            <h1>🎉 Welcome to ${planName}!</h1>
+            <h1>🎉 Welcome to ${planName} Plan!</h1>
           </div>
           <div class="content">
             <h2>Hi ${userName},</h2>
             <p>Congratulations! You've successfully subscribed to the <strong>${planName} Plan</strong> on Jigz.</p>
             
             <div class="coins-box">
-              <h3 style="margin: 0; color: #3b82f6;">${monthlyCoins} Coins Added to Your Account!</h3>
-              <p style="margin: 5px 0 0 0; color: #6b7280;">Ready to use for job applications and posting</p>
+              <h3 style="margin: 0; color: #3b82f6; font-size: 1.5em;">${monthlyCoins} Coins Added!</h3>
+              <p style="margin: 8px 0 0 0; color: #6b7280; font-size: 1.1em;">Ready to use for job applications and posting</p>
             </div>
 
             <div class="highlight">
-              <h3>Your Subscription Details:</h3>
-              <p><strong>Plan:</strong> ${planName}</p>
-              <p><strong>Monthly Coins:</strong> ${monthlyCoins}</p>
-              <p><strong>Monthly Price:</strong> $${priceFormatted}</p>
-              <p><strong>Next Billing:</strong> ${nextBillingDate}</p>
+              <h3 style="margin-top: 0; color: #1e40af;">Your Subscription Details:</h3>
+              <div class="info-box">
+                <p style="margin: 8px 0;"><strong>Plan:</strong> ${planName}</p>
+                <p style="margin: 8px 0;"><strong>Monthly Coins:</strong> ${monthlyCoins}</p>
+                <p style="margin: 8px 0;"><strong>Monthly Price:</strong> $${priceFormatted}</p>
+                <p style="margin: 8px 0;"><strong>Next Billing:</strong> ${nextBillingDate}</p>
+              </div>
             </div>
 
-            <h3>What You Can Do With Your Coins:</h3>
+            <h3 style="color: #1e40af;">What You Can Do With Your Coins:</h3>
             <div class="benefit">Apply to jobs (1 coin per application)</div>
             <div class="benefit">Post job listings (3 coins per post)</div>
             <div class="benefit">Connect with quality freelancers and clients</div>
             <div class="benefit">Access to our full marketplace features</div>
+            <div class="benefit">Priority support and premium features</div>
 
-            <p>Your coins will automatically renew each month. You can cancel anytime from your account settings.</p>
+            <p style="margin: 25px 0;">Your coins will automatically renew each month. You can manage your subscription anytime from your account settings.</p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${baseUrl}/dashboard" class="cta-button">Go to Dashboard</a>
+            </div>
             
             <p>Thank you for choosing Jigz to power your freelance career!</p>
             
@@ -1273,6 +1282,384 @@ The Jigz Team
     }
   }
 
+  async sendServiceApprovalEmail(email: string, userName: string, serviceTitle: string, adminNotes?: string): Promise<boolean> {
+    if (!this.useSendGridAPI && !this.transporter) {
+      console.warn('Email service not initialized');
+      return false;
+    }
+
+    const baseUrl = this.getBaseUrl();
+
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Service Approved - Jigz</title>
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+          .logo { max-width: 150px; height: auto; margin-bottom: 10px; }
+          .content { background: #f8fafc; padding: 30px; border-radius: 0 0 8px 8px; }
+          .button { display: inline-block; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin: 20px 0; }
+          .footer { text-align: center; margin-top: 20px; color: #666; font-size: 14px; }
+          .service-details { background: white; border-radius: 8px; padding: 20px; margin: 20px 0; border-left: 4px solid #10b981; }
+          .admin-notes { background: #f0f9ff; border-left: 4px solid #0ea5e9; padding: 15px; margin: 15px 0; border-radius: 4px; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <img src="${baseUrl}/attached_assets/JIGZ%20LOGO-01_1754969521380.jpg" alt="Jigz Logo" class="logo" />
+            <h1>✅ Service Approved!</h1>
+          </div>
+          <div class="content">
+            <h2>Congratulations, ${userName}!</h2>
+            <p>Great news! Your service has been approved by our admin team and is now live on Jigz.</p>
+            
+            <div class="service-details">
+              <h3>Service Details:</h3>
+              <p><strong>Service Title:</strong> ${serviceTitle}</p>
+              <p><strong>Status:</strong> <span style="color: #10b981; font-weight: bold;">✅ Approved</span></p>
+              <p><strong>Approval Date:</strong> ${new Date().toLocaleDateString()}</p>
+            </div>
+            
+            ${adminNotes ? `
+            <div class="admin-notes">
+              <h4>Admin Notes:</h4>
+              <p>${adminNotes}</p>
+            </div>
+            ` : ''}
+            
+            <p>Your service is now visible to potential clients who can:</p>
+            <ul>
+              <li>✅ View your service details</li>
+              <li>✅ Send you inquiries</li>
+              <li>✅ Request your services</li>
+              <li>✅ Leave reviews after completion</li>
+            </ul>
+            
+            <p style="text-align: center;">
+              <a href="${baseUrl}/dashboard" class="button">View Dashboard</a>
+            </p>
+            
+            <p>Start receiving inquiries and grow your business on Jigz!</p>
+            
+            <p>Best regards,<br>The Jigz Team</p>
+          </div>
+          <div class="footer">
+            <p>This email was sent because your service was approved on Jigz.</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    const textContent = `
+Congratulations, ${userName}!
+
+Great news! Your service has been approved by our admin team and is now live on Jigz.
+
+Service Details:
+- Service Title: ${serviceTitle}
+- Status: ✅ Approved
+- Approval Date: ${new Date().toLocaleDateString()}
+
+${adminNotes ? `Admin Notes: ${adminNotes}\n\n` : ''}
+Your service is now visible to potential clients who can:
+- View your service details
+- Send you inquiries
+- Request your services
+- Leave reviews after completion
+
+Start receiving inquiries and grow your business on Jigz!
+
+Best regards,
+The Jigz Team
+    `;
+
+    try {
+      if (this.useSendGridAPI) {
+        await sgMail.send({
+          to: email,
+          from: this.fromEmail,
+          subject: `Service Approved - ${serviceTitle}`,
+          text: textContent,
+          html: htmlContent,
+          trackingSettings: {
+            clickTracking: { enable: false },
+            openTracking: { enable: false },
+            subscriptionTracking: { enable: false },
+            ganalytics: { enable: false }
+          }
+        });
+      } else {
+        await this.transporter!.sendMail({
+          from: `"Jigz" <${this.fromEmail}>`,
+          to: email,
+          subject: `Service Approved - ${serviceTitle}`,
+          text: textContent,
+          html: htmlContent,
+        });
+      }
+
+      return true;
+    } catch (error) {
+      console.error('Failed to send service approval email:', error);
+      return false;
+    }
+  }
+
+  async sendServiceRejectionEmail(email: string, userName: string, serviceTitle: string, adminNotes?: string): Promise<boolean> {
+    if (!this.useSendGridAPI && !this.transporter) {
+      console.warn('Email service not initialized');
+      return false;
+    }
+
+    const baseUrl = this.getBaseUrl();
+
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Service Update - Jigz</title>
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+          .logo { max-width: 150px; height: auto; margin-bottom: 10px; }
+          .content { background: #f8fafc; padding: 30px; border-radius: 0 0 8px 8px; }
+          .button { display: inline-block; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin: 20px 0; }
+          .footer { text-align: center; margin-top: 20px; color: #666; font-size: 14px; }
+          .service-details { background: white; border-radius: 8px; padding: 20px; margin: 20px 0; border-left: 4px solid #ef4444; }
+          .admin-notes { background: #fef2f2; border-left: 4px solid #ef4444; padding: 15px; margin: 15px 0; border-radius: 4px; }
+          .next-steps { background: #f0f9ff; border-left: 4px solid #0ea5e9; padding: 15px; margin: 15px 0; border-radius: 4px; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <img src="${baseUrl}/attached_assets/JIGZ%20LOGO-01_1754969521380.jpg" alt="Jigz Logo" class="logo" />
+            <h1>📝 Service Update Required</h1>
+          </div>
+          <div class="content">
+            <h2>Hi ${userName},</h2>
+            <p>We've reviewed your service and it requires some updates before it can be approved.</p>
+            
+            <div class="service-details">
+              <h3>Service Details:</h3>
+              <p><strong>Service Title:</strong> ${serviceTitle}</p>
+              <p><strong>Status:</strong> <span style="color: #ef4444; font-weight: bold;">⚠️ Requires Updates</span></p>
+              <p><strong>Review Date:</strong> ${new Date().toLocaleDateString()}</p>
+            </div>
+            
+            ${adminNotes ? `
+            <div class="admin-notes">
+              <h4>Admin Feedback:</h4>
+              <p>${adminNotes}</p>
+            </div>
+            ` : ''}
+            
+            <div class="next-steps">
+              <h4>Next Steps:</h4>
+              <ul>
+                <li>📝 Review the admin feedback above</li>
+                <li>✏️ Update your service based on the feedback</li>
+                <li>🔄 Resubmit your service for review</li>
+                <li>✅ Once approved, your service will be live</li>
+              </ul>
+            </div>
+            
+            <p style="text-align: center;">
+              <a href="${baseUrl}/dashboard" class="button">Update Service</a>
+            </p>
+            
+            <p>We're here to help you get your service approved. If you have any questions, please don't hesitate to contact our support team.</p>
+            
+            <p>Best regards,<br>The Jigz Team</p>
+          </div>
+          <div class="footer">
+            <p>This email was sent because your service requires updates on Jigz.</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    const textContent = `
+Hi ${userName},
+
+We've reviewed your service and it requires some updates before it can be approved.
+
+Service Details:
+- Service Title: ${serviceTitle}
+- Status: ⚠️ Requires Updates
+- Review Date: ${new Date().toLocaleDateString()}
+
+${adminNotes ? `Admin Feedback: ${adminNotes}\n\n` : ''}
+Next Steps:
+- Review the admin feedback above
+- Update your service based on the feedback
+- Resubmit your service for review
+- Once approved, your service will be live
+
+We're here to help you get your service approved. If you have any questions, please don't hesitate to contact our support team.
+
+Best regards,
+The Jigz Team
+    `;
+
+    try {
+      if (this.useSendGridAPI) {
+        await sgMail.send({
+          to: email,
+          from: this.fromEmail,
+          subject: `Service Update Required - ${serviceTitle}`,
+          text: textContent,
+          html: htmlContent,
+          trackingSettings: {
+            clickTracking: { enable: false },
+            openTracking: { enable: false },
+            subscriptionTracking: { enable: false },
+            ganalytics: { enable: false }
+          }
+        });
+      } else {
+        await this.transporter!.sendMail({
+          from: `"Jigz" <${this.fromEmail}>`,
+          to: email,
+          subject: `Service Update Required - ${serviceTitle}`,
+          text: textContent,
+          html: htmlContent,
+        });
+      }
+
+      return true;
+    } catch (error) {
+      console.error('Failed to send service rejection email:', error);
+      return false;
+    }
+  }
+
+  async sendSubscriptionCancellationEmail(
+    email: string, 
+    userName: string, 
+    planType: string, 
+    cancellationDate: string
+  ): Promise<boolean> {
+    if (!this.useSendGridAPI && !this.transporter) {
+      console.warn('Email service not initialized');
+      return false;
+    }
+
+    const baseUrl = this.getBaseUrl();
+    const planName = planType.charAt(0).toUpperCase() + planType.slice(1);
+
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Subscription Cancellation - Jigz</title>
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: #dc2626; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+          .logo { max-width: 150px; height: auto; margin-bottom: 10px; }
+          .content { background: #f8fafc; padding: 30px; border-radius: 0 0 8px 8px; }
+          .button { display: inline-block; background: #dc2626; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin: 20px 0; }
+          .footer { text-align: center; margin-top: 20px; color: #666; font-size: 14px; }
+          .highlight { background: #fef2f2; border-left: 4px solid #dc2626; padding: 15px; margin: 15px 0; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <img src="${baseUrl}/attached_assets/JIGZ%20LOGO-01_1754969521380.jpg" alt="Jigz Logo" class="logo" />
+            <h1>💔 Your Subscription to ${planName} Has Been Cancelled</h1>
+          </div>
+          <div class="content">
+            <h2>Hi ${userName},</h2>
+            <p>We're sorry to see you cancel your subscription to the <strong>${planName} Plan</strong> on Jigz.</p>
+            
+            <div class="highlight">
+              <p>Your subscription was cancelled on ${cancellationDate}.</p>
+              <p>You will no longer be charged for this plan.</p>
+            </div>
+
+            <p>If you have any questions or need assistance with your account, please feel free to contact our support team.</p>
+            
+            <p>Best regards,<br>The Jigz Team</p>
+          </div>
+          <div class="footer">
+            <p>This email was sent from Jigz. Questions? Contact our support team.</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    const textContent = `
+Hi ${userName},
+
+We're sorry to see you cancel your subscription to the ${planName} Plan on Jigz.
+
+CANCELLATION DETAILS:
+- Plan: ${planName}
+- Cancelled On: ${cancellationDate}
+- Status: Cancelled
+
+Important: You will no longer be charged for this plan.
+
+Want to Reactivate?
+You can reactivate your subscription anytime from your account settings at ${baseUrl}/dashboard
+
+If you have any questions or need assistance with your account, please feel free to contact our support team.
+
+We hope to see you back soon!
+
+Best regards,
+The Jigz Team
+    `;
+
+    try {
+      if (this.useSendGridAPI) {
+        await sgMail.send({
+          to: email,
+          from: this.fromEmail,
+          subject: 'Subscription Cancellation - Jigz',
+          text: textContent,
+          html: htmlContent,
+          trackingSettings: {
+            clickTracking: { enable: false },
+            openTracking: { enable: false },
+            subscriptionTracking: { enable: false },
+            ganalytics: { enable: false }
+          }
+        });
+      } else {
+        await this.transporter!.sendMail({
+          from: `"Jigz" <${this.fromEmail}>`,
+          to: email,
+          subject: 'Subscription Cancellation - Jigz',
+          text: textContent,
+          html: htmlContent,
+        });
+      }
+      
+      console.log(`Subscription cancellation email sent to ${email} for ${planName}`);
+      return true;
+    } catch (error) {
+      console.error('Failed to send subscription cancellation email:', error);
+      return false;
+    }
+  }
+
   async sendEmail(options: { to: string; subject: string; text?: string; html?: string }): Promise<boolean> {
     if (!this.useSendGridAPI && !this.transporter) {
       console.warn('Email service not initialized');
@@ -1314,6 +1701,438 @@ The Jigz Team
 
   isConfigured(): boolean {
     return this.useSendGridAPI || this.transporter !== null;
+  }
+
+  async sendServiceRequestAcceptedEmail(
+    email: string, 
+    userName: string, 
+    serviceTitle: string, 
+    serviceProviderName: string
+  ): Promise<boolean> {
+    if (!this.useSendGridAPI && !this.transporter) {
+      console.warn('Email service not initialized');
+      return false;
+    }
+
+    const baseUrl = this.getBaseUrl();
+
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Service Request Accepted - Jigz</title>
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+          .logo { max-width: 150px; height: auto; margin-bottom: 10px; }
+          .content { background: #f8fafc; padding: 30px; border-radius: 0 0 8px 8px; }
+          .cta-button { display: inline-block; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white; padding: 12px 30px; text-decoration: none; border-radius: 25px; margin: 20px 0; font-weight: bold; }
+          .footer { text-align: center; margin-top: 20px; color: #666; font-size: 14px; }
+          .highlight { background: white; border-radius: 8px; padding: 20px; margin: 20px 0; border-left: 4px solid #22c55e; }
+          .info-box { background: #f9fafb; padding: 15px; border-radius: 8px; margin: 15px 0; border: 1px solid #e5e7eb; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <img src="${baseUrl}/attached_assets/JIGZ%20LOGO-01_1754969521380.jpg" alt="Jigz Logo" class="logo" />
+            <h1 style="margin: 0; font-size: 24px;">🎉 Service Request Accepted!</h1>
+          </div>
+          <div class="content">
+            <h2 style="color: #333; margin-bottom: 20px;">Great news, ${userName}!</h2>
+            
+            <p style="color: #555; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
+              Your service request has been accepted by the service provider.
+            </p>
+            
+            <div class="highlight">
+              <h3 style="color: #333; margin-top: 0;">Service Details:</h3>
+              <div class="info-box">
+                <p style="margin: 8px 0;"><strong>Service:</strong> ${serviceTitle}</p>
+                <p style="margin: 8px 0;"><strong>Provider:</strong> ${serviceProviderName}</p>
+                <p style="margin: 8px 0;"><strong>Status:</strong> Accepted</p>
+              </div>
+            </div>
+            
+            <p style="color: #555; font-size: 16px; line-height: 1.6; margin-bottom: 25px;">
+              You can now communicate with the service provider and coordinate the work details.
+            </p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${baseUrl}/messages" class="cta-button">Go to Messages</a>
+            </div>
+            
+            <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center;">
+              <p style="color: #888; font-size: 14px; margin: 0;">
+                This email was sent because you made a service request on Jigz.<br>
+                <a href="${baseUrl}" style="color: #22c55e;">Visit Jigz</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    const textContent = `
+Hi ${userName},
+
+Great news! Your service request has been accepted by the service provider.
+
+SERVICE DETAILS:
+- Service: ${serviceTitle}
+- Provider: ${serviceProviderName}
+- Status: Accepted
+
+You can now communicate with the service provider and coordinate the work details.
+
+Go to Messages: ${baseUrl}/messages
+
+This email was sent because you made a service request on Jigz.
+Visit Jigz: ${baseUrl}
+
+Best regards,
+The Jigz Team
+    `;
+
+    try {
+      if (this.useSendGridAPI) {
+        await sgMail.send({
+          to: email,
+          from: this.fromEmail,
+          subject: `Service Request Accepted - ${serviceTitle}`,
+          text: textContent,
+          html: htmlContent,
+          trackingSettings: {
+            clickTracking: { enable: false },
+            openTracking: { enable: false },
+            subscriptionTracking: { enable: false },
+            ganalytics: { enable: false }
+          }
+        });
+      } else {
+        await this.transporter!.sendMail({
+          from: `"Jigz" <${this.fromEmail}>`,
+          to: email,
+          subject: `Service Request Accepted - ${serviceTitle}`,
+          text: textContent,
+          html: htmlContent,
+        });
+      }
+      
+      console.log(`Service request accepted email sent to ${email} for ${serviceTitle}`);
+      return true;
+    } catch (error) {
+      console.error('Failed to send service request accepted email:', error);
+      return false;
+    }
+  }
+
+  async sendServiceInquiryEmail(
+    email: string, 
+    userName: string, 
+    serviceTitle: string, 
+    inquirerName: string,
+    inquiryMessage: string
+  ): Promise<boolean> {
+    if (!this.useSendGridAPI && !this.transporter) {
+      console.warn('Email service not initialized');
+      return false;
+    }
+
+    console.log('Service inquiry email function called with:', {
+      email,
+      userName,
+      serviceTitle,
+      inquirerName,
+      inquiryMessage,
+      useSendGridAPI: this.useSendGridAPI,
+      fromEmail: this.fromEmail
+    });
+
+    const baseUrl = this.getBaseUrl();
+
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>New Service Inquiry - Jigz</title>
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+          .logo { max-width: 150px; height: auto; margin-bottom: 10px; }
+          .content { background: #f8fafc; padding: 30px; border-radius: 0 0 8px 8px; }
+          .cta-button { display: inline-block; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; padding: 12px 30px; text-decoration: none; border-radius: 25px; margin: 20px 0; font-weight: bold; }
+          .footer { text-align: center; margin-top: 20px; color: #666; font-size: 14px; }
+          .highlight { background: white; border-radius: 8px; padding: 20px; margin: 20px 0; border-left: 4px solid #3b82f6; }
+          .inquiry-box { background: #f0f9ff; border: 2px solid #3b82f6; padding: 20px; border-radius: 8px; margin: 20px 0; }
+          .info-box { background: #f9fafb; padding: 15px; border-radius: 8px; margin: 15px 0; border: 1px solid #e5e7eb; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1 style="margin: 0; font-size: 24px;">📧 New Service Inquiry!</h1>
+          </div>
+          <div class="content">
+            <h2 style="color: #333; margin-bottom: 20px;">Hi ${userName},</h2>
+            
+            <p style="color: #555; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
+              You have received a new inquiry for your service on Jigz!
+            </p>
+            
+            <div class="highlight">
+              <h3 style="color: #333; margin-top: 0;">Service Details:</h3>
+              <div class="info-box">
+                <p style="margin: 8px 0;"><strong>Service:</strong> ${serviceTitle}</p>
+                <p style="margin: 8px 0;"><strong>Inquirer:</strong> ${inquirerName}</p>
+                <p style="margin: 8px 0;"><strong>Status:</strong> New Inquiry</p>
+              </div>
+            </div>
+            
+            <div class="inquiry-box">
+              <h3 style="color: #1e40af; margin-top: 0;">Inquiry Message:</h3>
+              <p style="color: #555; font-style: italic; margin: 0;">"${inquiryMessage}"</p>
+            </div>
+            
+            <p style="color: #555; font-size: 16px; line-height: 1.6; margin-bottom: 25px;">
+              Respond to this inquiry to start a conversation and potentially secure a new client!
+            </p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${baseUrl}/messages" class="cta-button">Respond to Inquiry</a>
+            </div>
+            
+            <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center;">
+              <p style="color: #888; font-size: 14px; margin: 0;">
+                This email was sent because you received a service inquiry on Jigz.<br>
+                <a href="${baseUrl}" style="color: #3b82f6;">Visit Jigz</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    const textContent = `
+Hi ${userName},
+
+You have received a new inquiry for your service on Jigz!
+
+SERVICE DETAILS:
+- Service: ${serviceTitle}
+- Inquirer: ${inquirerName}
+- Status: New Inquiry
+
+INQUIRY MESSAGE:
+"${inquiryMessage}"
+
+Respond to this inquiry to start a conversation and potentially secure a new client!
+
+Respond to Inquiry: ${baseUrl}/messages
+
+This email was sent because you received a service inquiry on Jigz.
+Visit Jigz: ${baseUrl}
+
+Best regards,
+The Jigz Team
+    `;
+
+    try {
+      if (this.useSendGridAPI) {
+        console.log('Sending service inquiry email via SendGrid:', {
+          to: email,
+          from: this.fromEmail,
+          subject: `New Service Inquiry - ${serviceTitle}`,
+          baseUrl,
+          htmlLength: htmlContent.length,
+          textLength: textContent.length
+        });
+        
+        await sgMail.send({
+          to: email,
+          from: this.fromEmail,
+          subject: `New Service Inquiry - ${serviceTitle}`,
+          text: textContent,
+          html: htmlContent,
+          trackingSettings: {
+            clickTracking: { enable: false },
+            openTracking: { enable: false },
+            subscriptionTracking: { enable: false },
+            ganalytics: { enable: false }
+          }
+        });
+      } else {
+        await this.transporter!.sendMail({
+          from: `"Jigz" <${this.fromEmail}>`,
+          to: email,
+          subject: `New Service Inquiry - ${serviceTitle}`,
+          text: textContent,
+          html: htmlContent,
+        });
+      }
+      
+      console.log(`Service inquiry email sent to ${email} for ${serviceTitle}`);
+      return true;
+          } catch (error: any) {
+        console.error('Failed to send service inquiry email:', error);
+        if (error.response && error.response.body) {
+          console.error('SendGrid error details:', error.response.body);
+        }
+        return false;
+      }
+  }
+
+  async sendJobCompletionEmail(
+    email: string, 
+    userName: string, 
+    jobTitle: string, 
+    completionDate: string,
+    isService: boolean = false
+  ): Promise<boolean> {
+    if (!this.useSendGridAPI && !this.transporter) {
+      console.warn('Email service not initialized');
+      return false;
+    }
+
+    const baseUrl = this.getBaseUrl();
+    const workType = isService ? 'Service' : 'Job';
+    const workTypeLower = isService ? 'service' : 'job';
+
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>${workType} Completed Successfully - Jigz</title>
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+          .logo { max-width: 150px; height: auto; margin-bottom: 10px; }
+          .content { background: #f8fafc; padding: 30px; border-radius: 0 0 8px 8px; }
+          .cta-button { display: inline-block; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 12px 30px; text-decoration: none; border-radius: 25px; margin: 20px 0; font-weight: bold; }
+          .footer { text-align: center; margin-top: 20px; color: #666; font-size: 14px; }
+          .highlight { background: white; border-radius: 8px; padding: 20px; margin: 20px 0; border-left: 4px solid #10b981; }
+          .success-box { background: #ecfdf5; border: 2px solid #10b981; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center; }
+          .info-box { background: #f9fafb; padding: 15px; border-radius: 8px; margin: 15px 0; border: 1px solid #e5e7eb; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <img src="${baseUrl}/attached_assets/JIGZ%20LOGO-01_1754969521380.jpg" alt="Jigz Logo" class="logo" />
+            <h1 style="margin: 0; font-size: 24px;">🎉 ${workType} Completed Successfully!</h1>
+          </div>
+          <div class="content">
+            <h2 style="color: #333; margin-bottom: 20px;">Congratulations, ${userName}!</h2>
+            
+            <div class="success-box">
+              <h3 style="margin: 0; color: #10b981; font-size: 1.5em;">${workType} Successfully Completed!</h3>
+              <p style="margin: 8px 0 0 0; color: #6b7280;">Great work on delivering quality results</p>
+            </div>
+            
+            <div class="highlight">
+              <h3 style="color: #333; margin-top: 0;">${workType} Details:</h3>
+              <div class="info-box">
+                <p style="margin: 8px 0;"><strong>${workType}:</strong> ${jobTitle}</p>
+                <p style="margin: 8px 0;"><strong>Completion Date:</strong> ${completionDate}</p>
+                <p style="margin: 8px 0;"><strong>Status:</strong> Completed</p>
+              </div>
+            </div>
+            
+            <p style="color: #555; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
+              Your ${workTypeLower} has been marked as completed. This is a great achievement!
+            </p>
+            
+            <h3 style="color: #10b981;">What's Next?</h3>
+            <ul style="color: #555; line-height: 1.8;">
+              <li>✅ Rate your experience with the client/freelancer</li>
+              <li>✅ Leave a review to help build reputation</li>
+              <li>✅ Consider future collaborations</li>
+              <li>✅ Look for new opportunities on Jigz</li>
+            </ul>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${baseUrl}/dashboard" class="cta-button">Go to Dashboard</a>
+            </div>
+            
+            <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center;">
+              <p style="color: #888; font-size: 14px; margin: 0;">
+                This email was sent because your ${workTypeLower} was completed on Jigz.<br>
+                <a href="${baseUrl}" style="color: #10b981;">Visit Jigz</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    const textContent = `
+Congratulations, ${userName}!
+
+Your ${workTypeLower} has been completed successfully!
+
+${workType} DETAILS:
+- ${workType}: ${jobTitle}
+- Completion Date: ${completionDate}
+- Status: Completed
+
+What's Next?
+✓ Rate your experience with the client/freelancer
+✓ Leave a review to help build reputation
+✓ Consider future collaborations
+✓ Look for new opportunities on Jigz
+
+Go to Dashboard: ${baseUrl}/dashboard
+
+This email was sent because your ${workTypeLower} was completed on Jigz.
+Visit Jigz: ${baseUrl}
+
+Best regards,
+The Jigz Team
+    `;
+
+    try {
+      if (this.useSendGridAPI) {
+        await sgMail.send({
+          to: email,
+          from: this.fromEmail,
+          subject: `${workType} Completed Successfully - ${jobTitle}`,
+          text: textContent,
+          html: htmlContent,
+          trackingSettings: {
+            clickTracking: { enable: false },
+            openTracking: { enable: false },
+            subscriptionTracking: { enable: false },
+            ganalytics: { enable: false }
+          }
+        });
+      } else {
+        await this.transporter!.sendMail({
+          from: `"Jigz" <${this.fromEmail}>`,
+          to: email,
+          subject: `${workType} Completed Successfully - ${jobTitle}`,
+          text: textContent,
+          html: htmlContent,
+        });
+      }
+      
+      console.log(`${workType} completion email sent to ${email} for ${jobTitle}`);
+      return true;
+    } catch (error) {
+      console.error(`Failed to send ${workTypeLower} completion email:`, error);
+      return false;
+    }
   }
 }
 

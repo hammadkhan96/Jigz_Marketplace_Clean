@@ -88,8 +88,8 @@ export function MessagingInterface({ conversation, onClose }: MessagingInterface
   };
 
   return (
-    <>
-      <CardHeader className="pb-3">
+    <div className="flex flex-col h-full">
+      <CardHeader className="pb-3 flex-shrink-0">
         <div className="flex items-center justify-between">
           <div>
             <CardTitle className="flex items-center gap-2 text-lg">
@@ -110,9 +110,9 @@ export function MessagingInterface({ conversation, onClose }: MessagingInterface
           )}
         </div>
       </CardHeader>
-      <Separator />
+      <Separator className="flex-shrink-0" />
 
-      <CardContent className="p-0 flex flex-col h-[calc(100vh-14rem)]">
+      <div className="flex-1 flex flex-col min-h-0">
         {/* Messages Area */}
         <ScrollArea className="flex-1 py-4 bg-gray-50">
           {isLoading ? (
@@ -166,8 +166,8 @@ export function MessagingInterface({ conversation, onClose }: MessagingInterface
           )}
         </ScrollArea>
 
-        {/* Message Input */}
-        <div className="border-t p-2">
+        {/* Message Input Footer - Fixed at bottom */}
+        <div className="border-t bg-white p-3 flex-shrink-0">
           {messages.length <= 2 && (
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-2 mb-2">
               <p className="text-xs text-yellow-800 text-center">
@@ -175,7 +175,7 @@ export function MessagingInterface({ conversation, onClose }: MessagingInterface
               </p>
             </div>
           )}
-          <form onSubmit={handleSendMessage} className="flex gap-2">
+          <form onSubmit={handleSendMessage} className="flex gap-2 mb-2">
             <Input
               value={messageText}
               onChange={(e) => setMessageText(e.target.value)}
@@ -191,8 +191,13 @@ export function MessagingInterface({ conversation, onClose }: MessagingInterface
               <Send className="h-4 w-4" />
             </Button>
           </form>
+          <div className="text-center">
+            <p className="text-xs text-gray-400">
+              Jigz - Copyright © 2025 XpoII Limited - All rights reserved
+            </p>
+          </div>
         </div>
-      </CardContent>
-    </>
+      </div>
+    </div>
   );
 }

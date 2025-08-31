@@ -3,16 +3,12 @@
 ## Issue
 Email verification was not working in deployed environments because the verification URLs were constructed using development-specific environment variables.
 
-## Root Cause
-The email service was using `REPLIT_DEV_DOMAIN` environment variable to construct verification URLs, which is only available in Replit development environments. In deployed apps (Google Cloud, etc.), this variable is not set, causing verification links to point to incorrect URLs.
-
 ## Solution
 Updated the email service to properly handle different deployment environments:
 
 ### Changes Made
 1. **Added helper method `getBaseUrl()`** in EmailService class that:
    - Uses `DEPLOYED_URL` environment variable for production
-   - Falls back to `REPLIT_DEV_DOMAIN` for development
    - Provides appropriate localhost fallback for local development
 
 2. **Updated all email templates** to use the helper method:

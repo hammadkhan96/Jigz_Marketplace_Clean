@@ -84,25 +84,27 @@ export default function JobCard({ job, onApply }: JobCardProps) {
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200">
       <Link href={`/job/${job.id}`}>
-        <div className="p-6 cursor-pointer">
-          <div className="flex items-start justify-between mb-3">
-          <h3 className="text-lg font-semibold text-neutral-900">{job.title}</h3>
-          <Badge className={getStatusColor(job.status)}>
-            {job.status === "open" ? "Open" : job.status === "in_progress" ? "Closed" : "Completed"}
-          </Badge>
-        </div>
+        <div className="p-4 sm:p-6 cursor-pointer">
+          <div className="flex items-start justify-between mb-3 gap-3">
+            <h3 className="text-lg font-semibold text-neutral-900 flex-1 min-w-0 break-words">{job.title}</h3>
+            <Badge className={`${getStatusColor(job.status)} flex-shrink-0`}>
+              {job.status === "open" ? "Open" : job.status === "in_progress" ? "Closed" : "Completed"}
+            </Badge>
+          </div>
         
         <p className="text-neutral-600 text-sm mb-4 line-clamp-2">
           {job.description}
         </p>
         
-        <div className="flex items-center text-sm text-neutral-500 mb-4">
-          <MapPin className="h-4 w-4 mr-2" />
-          <span>{job.location}</span>
+        <div className="flex items-center text-sm text-neutral-500 mb-4 flex-wrap gap-2">
+          <div className="flex items-center">
+            <MapPin className="h-4 w-4 mr-2 flex-shrink-0" />
+            <span className="truncate">{job.location}</span>
+          </div>
           {job.duration && (
             <>
-              <span className="mx-2">•</span>
-              <span>
+              <span className="mx-2 text-gray-400">•</span>
+              <span className="text-blue-600 font-medium">
                 {job.duration === "custom" ? job.customDuration : job.duration}
               </span>
             </>
@@ -122,9 +124,9 @@ export default function JobCard({ job, onApply }: JobCardProps) {
           </div>
         )}
         
-        <div className="flex items-center justify-between">
-          <div>
-            <span className="text-lg font-semibold text-neutral-900">{budgetText}</span>
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <div className="flex-1 min-w-0">
+            <span className="text-lg font-semibold text-neutral-900 break-words">{budgetText}</span>
             <span className="text-sm text-neutral-500 ml-1">
               {job.budgetType === "hourly" ? "rate" : "budget"}
             </span>
@@ -133,7 +135,7 @@ export default function JobCard({ job, onApply }: JobCardProps) {
             hasAlreadyApplied ? (
               <Button 
                 disabled
-                className="bg-green-600 text-white cursor-not-allowed gap-2"
+                className="bg-green-600 text-white cursor-not-allowed gap-2 flex-shrink-0"
               >
                 <CheckCircle className="h-4 w-4" />
                 Applied
@@ -145,7 +147,7 @@ export default function JobCard({ job, onApply }: JobCardProps) {
                   e.stopPropagation();
                   onApply(job);
                 }}
-                className="bg-blue-600 text-white hover:bg-blue-700"
+                className="bg-blue-600 text-white hover:bg-blue-700 flex-shrink-0"
                 disabled={job.status !== "open"}
               >
                 Apply Now
@@ -158,7 +160,7 @@ export default function JobCard({ job, onApply }: JobCardProps) {
                 e.stopPropagation();
                 window.location.href = "/login";
               }}
-              className="bg-gray-600 text-white hover:bg-gray-700 gap-2"
+              className="bg-gray-600 text-white hover:bg-gray-700 gap-2 flex-shrink-0"
             >
               <LogIn className="h-4 w-4" />
               Login to Apply
@@ -167,24 +169,27 @@ export default function JobCard({ job, onApply }: JobCardProps) {
         </div>
         
           <div className="mt-4 pt-4 border-t border-gray-100">
-            <div className="flex items-center justify-between text-sm">
-              <div className="flex items-center text-neutral-500">
-                <Users className="h-4 w-4 mr-1" />
-                <span className="hidden sm:inline">{job.applicationCount || 0} applicants</span>
-                <span className="sm:hidden">{job.applicationCount || 0}</span>
+            <div className="flex items-center justify-between text-sm flex-wrap gap-3">
+              <div className="flex items-center text-neutral-500 flex-wrap gap-2 min-w-0">
+                <div className="flex items-center flex-shrink-0">
+                  <Users className="h-4 w-4 mr-1" />
+                  <span className="hidden sm:inline">{job.applicationCount || 0} applicants</span>
+                  <span className="sm:hidden">{job.applicationCount || 0}</span>
+                </div>
                 {job.freelancersNeeded && job.freelancersNeeded > 1 && (
                   <>
-                    <span className="mx-2">•</span>
-                    <span className="text-blue-600 font-medium">Need {job.freelancersNeeded}</span>
+                    <span className="mx-2 text-gray-400">•</span>
+                    <span className="text-blue-600 font-medium flex-shrink-0">Need {job.freelancersNeeded}</span>
                   </>
                 )}
-                <span className="mx-2">•</span>
-                <Clock className="h-4 w-4 mr-1" />
-                <span className="hidden sm:inline">{formatTimeAgo(job.createdAt)}</span>
-                <span className="sm:hidden">{formatTimeAgo(job.createdAt).replace(/\s+ago$/i, '')}</span>
-
+                <div className="flex items-center flex-shrink-0">
+                  <span className="mx-2 text-gray-400">•</span>
+                  <Clock className="h-4 w-4 mr-1" />
+                  <span className="hidden sm:inline">{formatTimeAgo(job.createdAt)}</span>
+                  <span className="sm:hidden">{formatTimeAgo(job.createdAt).replace(/\s+ago$/i, '')}</span>
+                </div>
               </div>
-              <Badge variant="secondary" className={getCategoryColor(job.category)}>
+              <Badge variant="secondary" className={`${getCategoryColor(job.category)} flex-shrink-0`}>
                 {job.category}
               </Badge>
             </div>
